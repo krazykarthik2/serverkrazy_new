@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@500&family=Syne:wght@400;500;600;700;800&display=swap');
+
+:root {
+
+    --themeColorLight: #bbf54c;
+    --themeColorDark: #5c3c98;
+}
+
+body {
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    --bs-body-font-family: 'Syne', monospace !important;
+    --themeColor: var(--themeColorLight);
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+        monospace;
+}
+
+#root {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+nav.navbar {
+    background: linear-gradient(180deg, var(--themeColor), transparent, var(--bs-body-bg)), linear-gradient(90deg, var(--themeColor), var(--bs-body-bg)) !important;
+}
+
+.footer {
+    background: linear-gradient(0deg, var(--themeColor), transparent, var(--bs-body-bg)), linear-gradient(-90deg, var(--themeColor), var(--bs-body-bg)) !important;
+
+}
+
+.navbar-collapse.collapse {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (min-width:576px) {
+    .navbar-expand-sm .navbar-collapse {
+        display: flex;
+        flex-direction: row !important;
+    }
+}
+
+body[data-bs-theme=dark] {
+    --themeColor: var(--themeColorDark)
+}
+
+.flex-0 {
+    flex: 0 0 auto !important;
+}
+
+.text-currentcolor {
+    color: currentColor !important
+}
+
+.code404 {
+    font-family: 'dosis', monospace !important;
+    font-size: 10em;
+}
+
+@keyframes rotateR {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(359deg);
+    }
+}
+.no-underline{
+    text-decoration: none;
+}
+.gears-anim{
+    transform: scale(.5);
+}
+.code404>span {
+    position: relative;
+    display: inline-block;
+}
+.streamImg{
+    max-height: 50vh;
+    max-width: 87vw;
+}
+.code404 span:nth-child(1) span {
+    animation: fa-fade 1.5s 0s infinite;
+}
+
+.code404 span:nth-child(2) span {
+    animation: fa-fade 1.5s .5s infinite;
+}
+
+.code404 span:nth-child(3) span {
+    animation: fa-fade 1.5s 1s infinite;
+}

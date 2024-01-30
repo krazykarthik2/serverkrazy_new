@@ -1,24 +1,29 @@
 import { faEdit, faQrcode, faSignOut } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useEffect, useState } from "react";
-import { Card, Stack, Button } from "react-bootstrap";
+import { Button, Card } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { firebaseContext } from "./App";
-
-function Home({ server }) {
+import { firebaseContext, serverContext } from "./App";
+import {  To_chat } from "./utils/Navigations";
+function Home() {
   const firebase = useContext(firebaseContext);
+  const server = useContext(serverContext);
+  const [user, setUser] = useState(firebase?.currentUser);
+  const [serverName, setServerName] = useState(null);
   useEffect(() => {
     console.log("triggered firebase update in home");
+    setUser(firebase?.currentUser);
   }, [firebase]);
-  const [user, setUser] = useState(firebase?.currentUser);
+  useEffect(() => {
+    console.log("triggered server update in home");
+    console.log(server);
+    setServerName(server?.serverName);
+  }, [server]);
 
   const navigate = useNavigate();
   function signOut() {
     firebase.signout();
   }
-  useEffect(() => {
-    setUser(firebase?.currentUser);
-  }, [firebase]);
   function createServer() {
     console.log("creating server");
     server.createServer((e) => navigate("/server/" + e));
@@ -49,21 +54,27 @@ function Home({ server }) {
             </div>
           </Card.Body>
         </Card>
-
-        <div className="d-flex flex-column  align-items-center gap-4 w-75">
-          <Button
-            onClick={(e) => createServer()}
-            className="btn btn-primary display-3"
-          >
-            Create Server
-          </Button>
-          <Link to={"/jump"} className="btn btn-primary display-3">
-            Jump to Server
-          </Link>
-          <Link to={"/jump"} className="btn btn-primary rounded-3">
-            <FontAwesomeIcon icon={faQrcode} size="6x" />
-          </Link>
-        </div>
+        {serverName ? (
+          <div className="flex flex-column">
+            <div className="display-1">{serverName}</div>
+            <To_chat serverName={serverName} />
+          </div>
+        ) : (
+          <div className="d-flex flex-column  align-items-center gap-4 w-75">
+            <Button
+              onClick={(e) => createServer()}
+              className="btn btn-primary display-3"
+            >
+              Create Server
+            </Button>
+            <Link to={"/jump"} className="btn btn-primary display-3">
+              Jump to Server
+            </Link>
+            <Link to={"/jump"} className="btn btn-primary rounded-3">
+              <FontAwesomeIcon icon={faQrcode} size="6x" />
+            </Link>
+          </div>
+        )}
       </div>
     </>
   );

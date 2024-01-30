@@ -8,12 +8,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext } from "react";
 import { Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { Back, ServerInfo_to_chat } from "./utils/Navigations";
-function ServerInfo({server}) {
+import { Back, To_chat } from "./utils/Navigations";
+function ServerInfo({ server }) {
   const navigate = useNavigate();
   function stopServer() {
     server.stopServer(() => navigate("/"));
-  } 
+  }
   function exitServer() {
     server.exitServer(() => navigate("/"));
   }
@@ -54,14 +54,14 @@ function ServerInfo({server}) {
               }
             >
               <FontAwesomeIcon icon={faShareNodes} size="3x" />
-          </Button>
+            </Button>
             <Button
               className=""
               onClick={() => navigator.clipboard.writeText(server.getLink())}
             >
               <FontAwesomeIcon icon={faCopy} size="3x" />
             </Button>
-            <ServerInfo_to_chat />
+            <To_chat serverName={server.serverName} />
           </div>
         </div>
       </div>

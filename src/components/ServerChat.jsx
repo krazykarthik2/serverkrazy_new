@@ -92,7 +92,9 @@ function InputType({ server }) {
 function Len({ e }) {
   return <div>{e.length}</div>;
 }
-function ServerChat() {
+function ServerChat(
+  // { firebase, server, msgBucket }
+  ) {
   const firebase = useContext(firebaseContext);
   const server = useContext(serverContext);
   const msgBucket = useContext(msgBucketContext);
@@ -114,6 +116,7 @@ function ServerChat() {
   }, [server]);
 
   useEffect(() => {
+    window.alert(msgBucket.length==0?"":msgBucket[msgBucket.length - 1].data.message);
     setMsgBucket(msgBucket);
   }, [msgBucket]);
 

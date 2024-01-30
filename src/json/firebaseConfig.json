@@ -1,7 +1,7 @@
 {
     "apiKey": "AIzaSyCNdLqd1Kk0gCTxWOn36pOqH5SDf0_AOpQ",
     "authDomain": "serverkrazy.firebaseapp.com",
-    "projectId": "serverkrazy",
+    "projectId": "serverkrazy", 
     "storageBucket": "serverkrazy.appspot.com",
     "messagingSenderId": "5605404619",
     "databaseURL": "https://serverkrazy-default-rtdb.firebaseio.com/",

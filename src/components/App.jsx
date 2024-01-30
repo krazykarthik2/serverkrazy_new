@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import {
   BrowserRouter,
   HashRouter,
@@ -30,22 +36,26 @@ function App() {
   window.__server = __server;
   window.__msgBucket = __msgBucket;
 
-  useMemo(() => {
+  useEffect(() => {
     server.onServChange = () => {
       setServer(server);
-      console.log("triggered server change");
+      console.log("triggered server change @App.js");
     };
     fb.onUpdate = () => {
       setFb(fb);
-      console.log("triggered firebase change");
+      console.log("triggered firebase change @App.js");
     };
 
     server.onMsgUpdate = () => {
       setMsgBucket(msgBucket);
-
-      console.log("triggered bucket change");
+      console.log(
+        msgBucket.length == 0
+          ? ""
+          : msgBucket[msgBucket.length - 1].data.message
+      );
+      console.log("triggered bucket change @App.js");
     };
-  }, []);
+  });
 
   return (
     <div>
@@ -63,7 +73,11 @@ function App() {
                   <Route
                     path="chat"
                     element={
-                      <ServerChat/>
+                      <ServerChat
+                        msgBucket={__msgBucket}
+                        server={__server}
+                        firebase={__fb}
+                      />
                     }
                   />
                 </Route>

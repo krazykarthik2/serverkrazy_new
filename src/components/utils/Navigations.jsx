@@ -2,11 +2,13 @@ import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Link } from "react-router-dom";
-function Back() {
+function Back({className , to = ".."}) {
   return (
-    <Link to=".." className="back" accessKey="b">
-      <FontAwesomeIcon icon={faArrowLeft} size="2x" />
-    </Link>
+    <div className={className}>
+      <Link to={to} className="back" accessKey="b">
+        <FontAwesomeIcon icon={faArrowLeft} size="2x" />
+      </Link>
+    </div>
   );
 }
 function To_chat({ serverName }) {
@@ -16,4 +18,4 @@ function To_chat({ serverName }) {
     </Link>
   );
 }
-export { Back, To_chat  };
+export { Back, To_chat };

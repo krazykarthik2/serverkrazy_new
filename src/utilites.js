@@ -102,6 +102,11 @@ function timestamp() {
   let date_now_ms = new Date();
   return date_now_ms.valueOf();
 }
+function isMobile() {
+  const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+  return regex.test(navigator.userAgent);
+}
+
 export {
   _,
   log,
@@ -112,4 +117,5 @@ export {
   timestamp,
   getParams,
   manageErrorFireBase,
+  isMobile,
 };

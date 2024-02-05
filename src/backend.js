@@ -6,6 +6,9 @@ import {
   put,
   uploadBytesResumable,
   getStorage,
+  deleteObject,
+  getDownloadURL,
+  listAll,
 } from "firebase/storage";
 import {
   createUserWithEmailAndPassword,
@@ -30,6 +33,7 @@ import { initializeApp } from "firebase/app";
 import {
   child,
   getDatabase,
+  off,
   onChildAdded,
   onChildChanged,
   onChildRemoved,
@@ -37,6 +41,7 @@ import {
   push,
   ref,
   remove,
+  update,
 } from "firebase/database";
 import {
   getThumb,
@@ -58,16 +63,14 @@ const firebase = {
 };
 function updateSettings() {}
 let _delete = (key, dbkey) => {
-  child(ref(firebase.database(), key + "/data"), dbkey).remove();
+  remove(child(ref(firebase.database(), key + "/data"), dbkey));
 };
 let _fileDelete = (filePath, servkey, key) => {
   // Delete the file
-  refStorage(firebase.storage(), "/" + filePath)
-    .delete()
-    .then(() => {
-      log("File deleted successfully");
-      _delete(servkey, key);
-    });
+  deleteObject(refStorage(firebase.storage(), "/" + filePath)).then(() => {
+    log("File deleted successfully");
+    _delete(servkey, key);
+  });
 };
 // function whenSignOut() {
 
@@ -111,42 +114,34 @@ class Server {
     return "https://serverkrazy.web.app/server/" + this.serverName;
   };
   onServChange = () => {};
-  onMsgUpdate = () =>{};
+  onMsgUpdate = () => {};
+
+  downloadURL = async (filePath) => {
+    return await getDownloadURL(refStorage(firebase.storage(), filePath));
+  };
   handlemsg = (data, mine) => {
-    let messageCont = document.createElement("div");
-    messageCont.classList.value = "message";
-    messageCont.id = data.key;
-    let msgData = data.val();
+    let msgData = { ...data.val(), key: data.key };
 
-    TEMPLATEmsg(
-      messageCont,
-      data.key,
-      msgData,
-      mine, 
-      this.decrypt,
-      this.HTMLforDel,
-      this.HTMLforFileDel
-    );
-    
-
-    this.msgbucket.push({data:data.val(),mine});
+    this.msgbucket.push({ ...msgData, mine });
     this.onMsgUpdate();
   };
   handlemsgChange = (data, mine) => {
-    // let messageCont = _("#" + data.key);
-    // let msgData = data.val();
-    // TEMPLATEmsg(
-    //   messageCont,
-    //   data.key,
-    //   msgData,
-    //   mine,
-    //   this.decrypt,
-    //   this.HTMLforDel,
-    //   this.HTMLforFileDel
-    // );
+    let msgData = { ...data.val(), key: data.key };
+    this.msgbucket[
+      this.msgbucket.findIndex((msg) => msg && msg.key == data.key)
+    ] = {
+      ...msgData,
+      mine,
+    };
+    this.onMsgUpdate();
   };
-  handlemsgDelete = (data, mine) => {
+  handlemsgDelete = (key) => {
+    // console.log(...args);
     // DeleteMessageUI(data.key);
+    console.log(key + " deleted");
+
+    delete this.msgbucket[this.msgbucket.findIndex((msg) => msg?.key == key)];
+    this.onMsgUpdate();
   };
   findFileInURL = () => {
     if (this.paramsURL["server"]) {
@@ -154,21 +149,21 @@ class Server {
       delete this.paramsURL["server"];
     }
     if (this.paramsURL["img"]) {
-      refStorage(firebase.storage(), "/" + this.paramsURL["img"])
-        .getDownloadURL()
-        .then((fileURL) => {
-          alert(
-            `<section class="impNotify screen">${HTMLforFile(
-              "image",
-              fileURL
-            )}<a class="icon link" target="_blank" href="${
-              window.location.origin +
-              window.location.pathname +
-              "?img=" +
-              this.paramsURL["img"]
-            }"></a> </section>`
-          );
-        });
+      getDownloadURL(
+        refStorage(firebase.storage(), "/" + this.paramsURL["img"])
+      ).then((fileURL) => {
+        alert(
+          `<section class="impNotify screen">${HTMLforFile(
+            "image",
+            fileURL
+          )}<a class="icon link" target="_blank" href="${
+            window.location.origin +
+            window.location.pathname +
+            "?img=" +
+            this.paramsURL["img"]
+          }"></a> </section>`
+        );
+      });
     }
     if (this.paramsURL["vid"]) {
       firebase
@@ -284,6 +279,10 @@ class Server {
       { onlyOnce: true }
     );
 
+    this.channels = {
+      ServerDetails: child(this.server, "serverDetails"),
+      data: child(this.server, "data"),
+    };
     onChildAdded(child(this.server, "serverDetails"), (data) => {
       this.serverOwner = data.val().owner;
       this.onServChange();
@@ -293,12 +292,13 @@ class Server {
       this.handlemsg(data, this.isMine(data.val().sender));
     });
 
-    onChildChanged(child(this.server, "data"), (data) => {
+    this.onChildChanged = onChildChanged(child(this.server, "data"), (data) => {
+      console.log("msg changed:", data);
       this.handlemsgChange(data, this.isMine(data.val().sender));
     });
 
-    onChildRemoved(child(this.server, "data"), (data) => {
-      this.handlemsgDelete(data, this.isMine(data.val().sender));
+    this.onChildRemoved = onChildRemoved(child(this.server, "data"), (data) => {
+      this.handlemsgDelete(data.key);
     });
   };
   jumpToServer = (server_shared_name, callback = function () {}) => {
@@ -308,13 +308,13 @@ class Server {
     } else {
       if (server_shared_name != "") {
         if (this.fbobj.currentUser != null) {
-          ref(this.fbobj.database, server_shared_name)
-            .once("value")
-            .then((data) => {
+          onValue(
+            ref(firebase.database(), server_shared_name),
+            (data) => {
               if (data.exists()) {
                 this.serverName = server_shared_name;
 
-                this.server = ref(this.fbobj.database, server_shared_name);
+                this.server = ref(firebase.database(), server_shared_name);
 
                 // notice("#messageBucket", "Successfully jumped to server:" +this.serverName);
                 this.setupServer();
@@ -328,10 +328,9 @@ class Server {
 
                 return false;
               }
-            })
-            .catch((e) => {
-              manageErrorFireBase(e);
-            });
+            },
+            { onlyOnce: true }
+          );
         } else {
           alert("log in to continue....");
         }
@@ -396,19 +395,20 @@ class Server {
         }).then((data) => {
           let uploadTask =
             ///todo:: upload file
+
             uploadBytesResumable(
               refStorage(
-                this.fbobj.storage,
-                this.fbobj.currentUser.displayName + "/" + getRandomString(5)
+                firebase.storage(),
+                this.serverName + "/" + getRandomString(5)
               ),
-              log(file)
+              file
             );
           log(uploadTask);
 
           uploadTask.on(
             "state_changed",
             (progress) => {
-              data.update({
+              update(data, {
                 bytesTransferred: progress.bytesTransferred,
               });
             },
@@ -418,7 +418,7 @@ class Server {
           );
 
           uploadTask.then((snapshot) => {
-            data.update({
+            update(data, {
               filePath: snapshot.metadata.fullPath,
             });
             console.log(file.name + " is uploaded...");
@@ -505,7 +505,12 @@ class Server {
   };
   exitServer = (callback = function () {}) => {
     if (this.server != null) {
+      this.msgbucket.length = 0;
+
+      off(this.channels.ServerDetails);
+      off(this.channels.data);
       this.server = null;
+
       callback();
     } else alert("already left from server");
     this.serverName = "";
@@ -517,23 +522,43 @@ class Server {
       if (this.serverOwner == this.fbobj.currentUser.uid)
         remove(this.server)
           .then(() => {
-            this.server = null;
-
-            this.serverName = "";
-            this.serverOwner = "";
-            this.onServChange();
-            callback();
+            listAll(refStorage(firebase.storage(), this.serverName))
+              .then((res) => {
+                res.items.forEach((item) => {
+                  deleteObject(item)
+                    .then(() => {
+                      this.server = null;
+                      this.serverName = "";
+                      this.serverOwner = "";
+                      this.onServChange();
+                      callback();
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                      manageErrorFireBase(err);
+                      this.server = null;
+                      this.serverName = "";
+                      this.serverOwner = "";
+                      this.onServChange();
+                      callback();
+                    });
+                });
+              })
+              .catch((err) => {
+                console.log(err);
+              });
           })
           .catch((err) => {
+            console.error(err);
+            this.server = null;
             this.serverName = "";
             this.serverOwner = "";
             this.onServChange();
             callback();
-
-            console.error(err);
           });
       else {
         this.server = null;
+        this.msgbucket.length = 0;
         callback();
 
         this.serverName = "";
@@ -612,12 +637,12 @@ class FBmanage {
         callback();
       } else {
         this.profPiconFB = true;
-        refStorage(this.currentUser.photoURL)
-          .getDownloadURL()
-          .then((fileURL) => {
+        getDownloadURL(refStorage(this.currentUser.photoURL)).then(
+          (fileURL) => {
             this.profilePic = fileURL;
             callback();
-          });
+          }
+        );
       }
     }
   };
@@ -717,6 +742,7 @@ class FBmanage {
         });
     }
   };
+
   signinGoogle = (callback = function () {}) => {
     // console.log("signinGoogle");
     let provider = new GoogleAuthProvider();
@@ -748,6 +774,7 @@ class FBmanage {
         }
       });
   };
+
   signinFacebook = (callback = function () {}) => {
     let provider = new FacebookAuthProvider();
     signInWithPopup(firebase.auth(), provider)
@@ -1001,5 +1028,6 @@ class FBmanage {
       });
   };
 }
+
 export default FBmanage;
-export { Server };
+export { Server, _delete, _fileDelete };

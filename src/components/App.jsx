@@ -1,28 +1,22 @@
 import React, {
-  useContext,
   useEffect,
-  useMemo,
-  useState,
-  useSyncExternalStore,
+  useState
 } from "react";
 import {
   BrowserRouter,
-  HashRouter,
-  MemoryRouter,
   Route,
-  Router,
-  RouterProvider,
-  Routes,
+  Routes
 } from "react-router-dom";
 import { fb, msgBucket, server } from "../frontend";
 import AccountActions from "./Auth/AccountActions";
 import ChangePwd from "./Auth/ChangePwd";
 import Sign from "./Auth/Sign";
+import ServerChat from "./Chatting_Screen/ServerChat";
 import Home from "./Home";
 import JumpToServer from "./JumpToServer";
-import ServerChat from "./ServerChat";
 import ServerInfo from "./ServerInfo";
-
+import EditProfile from "./Profile/Edit/EditProfile";
+import DeleteAcc from "./Auth/DeleteAcc";
 const firebaseContext = React.createContext();
 const serverContext = React.createContext();
 const msgBucketContext = React.createContext();
@@ -32,30 +26,36 @@ function App() {
   const [__server, setServer] = useState(server);
   const [__msgBucket, setMsgBucket] = useState(msgBucket);
 
-  window.__fb = __fb;
-  window.__server = __server;
-  window.__msgBucket = __msgBucket;
+  window._ = { __fb, __server, __msgBucket };
+  
 
   useEffect(() => {
-    server.onServChange = () => {
-      setServer(server);
+    const handleServerChange = () => {
+      setServer({ ...server });
       console.log("triggered server change @App.js");
     };
-    fb.onUpdate = () => {
-      setFb(fb);
+
+    const handleFbUpdate = () => {
+      setFb({ ...fb });
       console.log("triggered firebase change @App.js");
     };
 
-    server.onMsgUpdate = () => {
-      setMsgBucket(msgBucket);
-      console.log(
-        msgBucket.length == 0
-          ? ""
-          : msgBucket[msgBucket.length - 1].data.message
-      );
+    const handleMsgUpdate = () => {
+      setMsgBucket([...msgBucket]);
+
       console.log("triggered bucket change @App.js");
     };
-  });
+
+    server.onServChange = handleServerChange;
+    fb.onUpdate = handleFbUpdate;
+    server.onMsgUpdate = handleMsgUpdate;
+
+    return () => {
+      server.onServChange = null;
+      fb.onUpdate = null;
+      server.onMsgUpdate = null;
+    };
+  }, [server, fb, msgBucket]);
 
   return (
     <div>
@@ -83,6 +83,7 @@ function App() {
                 </Route>
 
                 <Route path="/auth">
+                  <Route path="deleteAcc" element={<DeleteAcc />} />
                   <Route
                     path="login"
                     element={<Sign hasAccount={true} firebase={__fb} />}
@@ -100,10 +101,14 @@ function App() {
                     element={<AccountActions firebase={__fb} />}
                   />
                 </Route>
-                <Route
-                  path="jump"
-                  element={<JumpToServer server={__server} />}
-                />
+                <Route path="/profile">
+                  <Route path=""  element={<AccountActions firebase={__fb} />} />
+                  <Route path="edit"  element={<EditProfile />} />
+                </Route>
+                <Route path="jump">
+                  <Route path="" element={<JumpToServer server={__server} />} />
+                  <Route path=":server" element={<JumpToServer server={__server} />} />
+                </Route>
               </Routes>
             </BrowserRouter>
           </msgBucketContext.Provider>
@@ -114,4 +119,5 @@ function App() {
 }
 
 export default App;
-export { firebaseContext, serverContext, msgBucketContext };
+export { firebaseContext, msgBucketContext, serverContext };
+

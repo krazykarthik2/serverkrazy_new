@@ -8,17 +8,7 @@ import {  To_chat } from "./utils/Navigations";
 function Home() {
   const firebase = useContext(firebaseContext);
   const server = useContext(serverContext);
-  const [user, setUser] = useState(firebase?.currentUser);
-  const [serverName, setServerName] = useState(null);
-  useEffect(() => {
-    console.log("triggered firebase update in home");
-    setUser(firebase?.currentUser);
-  }, [firebase]);
-  useEffect(() => {
-    console.log("triggered server update in home");
-    console.log(server);
-    setServerName(server?.serverName);
-  }, [server]);
+  
 
   const navigate = useNavigate();
   function signOut() {
@@ -29,6 +19,12 @@ function Home() {
     server.createServer((e) => navigate("/server/" + e));
     console.log("server created" + server.serverName);
   }
+  function handleStop() {
+    server.stopServer(() => navigate("/"));
+  }
+  function handleExit() {
+    server.exitServer(() => navigate("/"));
+  }
   return (
     <>
       <div className="gap-5 d-flex flex-column justify-content-center w-100 mt-5 align-items-center ">
@@ -36,7 +32,7 @@ function Home() {
           <Card.Body>
             <div className="user">
               <div className="greet display-2">Hi,</div>
-              <div className="user_name display-3">{user?.displayName}</div>
+              <div className="user_name display-3">{firebase?.currentUser?.displayName}</div>
             </div>
             <div className="d-flex justify-content-end">
               <div className="actions hstack gap-5 ml-auto">
@@ -54,20 +50,27 @@ function Home() {
             </div>
           </Card.Body>
         </Card>
-        {serverName ? (
+        {server.server ? (
           <div className="flex flex-column">
-            <div className="display-1">{serverName}</div>
-            <To_chat serverName={serverName} />
+            <div className="display-1">{server.serverName}</div>
+            
+            <Button onClick={()=>handleStop()}>Stop </Button>
+            <Button onClick={()=>handleExit()}>Exit </Button>
+
+
+            <To_chat serverName={server.serverName} />
           </div>
         ) : (
           <div className="d-flex flex-column  align-items-center gap-4 w-75">
             <Button
               onClick={(e) => createServer()}
               className="btn btn-primary display-3"
+              accessKey="c"
             >
               Create Server
             </Button>
-            <Link to={"/jump"} className="btn btn-primary display-3">
+            <Link to={"/jump"} className="btn btn-primary display-3" accessKey="j">
+
               Jump to Server
             </Link>
             <Link to={"/jump"} className="btn btn-primary rounded-3">

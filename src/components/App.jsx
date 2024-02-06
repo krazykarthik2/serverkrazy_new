@@ -1,12 +1,5 @@
-import React, {
-  useEffect,
-  useState
-} from "react";
-import {
-  BrowserRouter,
-  Route,
-  Routes
-} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { fb, msgBucket, server } from "../frontend";
 import AccountActions from "./Auth/AccountActions";
 import ChangePwd from "./Auth/ChangePwd";
@@ -27,7 +20,6 @@ function App() {
   const [__msgBucket, setMsgBucket] = useState(msgBucket);
 
   window._ = { __fb, __server, __msgBucket };
-  
 
   useEffect(() => {
     const handleServerChange = () => {
@@ -83,7 +75,11 @@ function App() {
                 </Route>
 
                 <Route path="/auth">
-                  <Route path="deleteAcc" element={<DeleteAcc />} />
+                  <Route path="deleteAcc">
+                    
+                  <Route path="" element={<DeleteAcc />} />
+                  <Route path="continue/:continue" element={<DeleteAcc />} />
+                  </Route>
                   <Route
                     path="login"
                     element={<Sign hasAccount={true} firebase={__fb} />}
@@ -102,12 +98,15 @@ function App() {
                   />
                 </Route>
                 <Route path="/profile">
-                  <Route path=""  element={<AccountActions firebase={__fb} />} />
-                  <Route path="edit"  element={<EditProfile />} />
+                  <Route path="" element={<AccountActions firebase={__fb} />} />
+                  <Route path="edit" element={<EditProfile />} />
                 </Route>
                 <Route path="jump">
                   <Route path="" element={<JumpToServer server={__server} />} />
-                  <Route path=":server" element={<JumpToServer server={__server} />} />
+                  <Route
+                    path=":server"
+                    element={<JumpToServer server={__server} />}
+                  />
                 </Route>
               </Routes>
             </BrowserRouter>
@@ -120,4 +119,3 @@ function App() {
 
 export default App;
 export { firebaseContext, msgBucketContext, serverContext };
-

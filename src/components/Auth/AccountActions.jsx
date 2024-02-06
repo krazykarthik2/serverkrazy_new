@@ -2,23 +2,20 @@ import React, { useContext, useEffect, useState } from "react";
 import { Alert, Button } from "react-bootstrap";
 import { Back } from "../utils/Navigations";
 import { Link, useNavigate } from "react-router-dom";
-
-function AccountActions({ firebase }) {
+import {firebaseContext} from "../App"
+function AccountActions() {
+  const firebase = useContext(firebaseContext)
   const navigate = useNavigate();
   function handleSignOut() {
     if (firebase?.currentUser) {
-      firebase
-        .auth()
-        .signOut()
-        .then(() => {
-          navigate("/auth/login");
-        })
-        .catch((error) => {
-          navigate("/auth/login");
-        });
+      firebase.signout((e) => {
+        navigate("/auth/login");
+      });
     }
   }
-  function handleLinkGoogle() {}
+  function handleLinkGoogle() {
+    
+  }
   function handleLinkFacebook() {}
   function handleUnlinkGoogle() {}
   function handleUnlinkFacebook() {}
@@ -45,7 +42,7 @@ function AccountActions({ firebase }) {
         Sign Out
       </Button>
       <Link to="/profile/edit">Edit Profile</Link>
-      <Link to="/changePwd">Change Password</Link>
+      <Link to="../changepass">Change Password</Link>
       {firebase.providers().find((provider) => provider === "google.com") ? (
         <Button onClick={() => handleUnlinkGoogle()}>Unlink Google</Button>
       ) : (
@@ -56,7 +53,7 @@ function AccountActions({ firebase }) {
       ) : (
         <Button onClick={() => handleLinkFacebook()}>Link Facebook</Button>
       )}
-      <Link to="/auth/deleteAcc">Delete Account</Link>
+      <Link to="/auth/deleteAcc/continue/auth>actions">Delete Account</Link>
       <Alert>
         <Alert.Heading>Last Signed In</Alert.Heading>
         <p>{lastSignInTime?.toString()}</p>

@@ -737,7 +737,7 @@ class FBmanage {
           }
         );
       else
-        this.signinwpass3rd(this.currentUser.email, oldPass, () => {
+        this.signInWithPass(this.currentUser.email, oldPass, () => {
           this.currentUser.delete();
         });
     }
@@ -819,9 +819,10 @@ class FBmanage {
     this.reAuth(provider, callback);
   };
   reAuth = (prov, callback = function () {}) => {
-    reauthenticateWithPopup(this.currentUser, this.auth, prov)
+    reauthenticateWithPopup(this.currentUser,  prov)
       .then((result) => {
         log(result);
+        log("from reauth@ backend.js")
         if (result)
           if (result.credential) {
             this.credential = result.credential;

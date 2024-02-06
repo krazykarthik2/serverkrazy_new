@@ -27,6 +27,8 @@ import {
   linkWithPopup,
   unlink as unlinkProvider,
   reload,
+  AuthCredential,
+  EmailAuthProvider,
 } from "firebase/auth";
 import { GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import { initializeApp } from "firebase/app";
@@ -812,21 +814,22 @@ class FBmanage {
   };
   reAuthGoogle = (callback = function () {}) => {
     let provider = new GoogleAuthProvider();
-    this.reAuth(provider, callback);
+    this.reAuth(provider, GoogleAuthProvider.credentialFromResult, callback);
   };
   reAuthFacebook = (callback = function () {}) => {
     let provider = new FacebookAuthProvider();
-    this.reAuth(provider, callback);
+    this.reAuth(provider, GoogleAuthProvider.credentialFromResult, callback);
   };
-  reAuth = (prov, callback = function () {}) => {
-    reauthenticateWithPopup(this.currentUser,  prov)
+  reAuth = (prov, getCred, callback = function () {}) => {
+    reauthenticateWithPopup(this.currentUser, prov)
       .then((result) => {
         log(result);
-        log("from reauth@ backend.js")
+        log("from reauth@ backend.js");
         if (result)
-          if (result.credential) {
-            this.credential = result.credential;
-            this.token = this.credential.accessToken;
+          if (result.user) {
+            console.log(prov);
+            this.token = result.user.accessToken;
+            this.credential = getCred(result);
             console.log("token:" + this.token, "cred:" + this.credential);
           }
         this.updateProviderData(result.user);
@@ -853,9 +856,9 @@ class FBmanage {
     linkWithPopup(this.currentUser, provider)
       .then((result) => {
         log(result);
-        if (result.credential) {
-          this.credential = result.credential;
-          this.token = this.credential.accessToken;
+        if (result.user) {
+          this.credential = GoogleAuthProvider.credentialFromResult(result);
+          this.token = this.credential.accessToken
           console.log("token:" + this.token, "cred:" + this.credential);
         }
 
@@ -884,8 +887,8 @@ class FBmanage {
     linkWithPopup(this.currentUser, provider)
       .then((result) => {
         log(result);
-        if (result.credential) {
-          this.credential = result.credential;
+        if (result.user) {
+          this.credential = FacebookAuthProvider.credentialFromResult(result);
           this.token = this.credential.accessToken;
           console.log("token:" + this.token, "cred:" + this.credential);
         }
@@ -1016,8 +1019,8 @@ class FBmanage {
     signInWithEmailAndPassword(firebase.auth(), email, password)
       .then((result) => {
         console.log(result);
-        if (result.credential) {
-          this.credential = result.credential;
+        if (result.user) {
+          this.credential = EmailAuthProvider.credential(email, password);
           this.token = this.credential.accessToken;
           console.log("token:" + this.token, "cred:" + this.credential);
         }

@@ -75,7 +75,7 @@ function DeleteAcc() {
         </button>
         <div>Hey, {firebase.currentUser?.displayName}</div>
         <div> do you want to really delete your account?</div>
-        {firebase.credential || isReAuthed || (
+        {(firebase.credential!=null || isReAuthed )||(
           <div className="vstack">
             <div>if yes, then </div>
             <ReAuthSection

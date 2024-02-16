@@ -1,0 +1,89 @@
+.User-showing-profile {
+  width: 100vw;
+  box-sizing: border-box;
+  padding: 20px;
+  font-family: Neue Machina, sans-serif;
+}
+.User-showing-profile {
+  .hello-_user {
+    width: 40vw;
+    height: fit-content;
+    box-sizing: border-box;
+  }
+
+  .hello {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #fff;
+    font-size: 40px;
+    font-family: Neue Machina, sans-serif;
+    font-weight: 300;
+    text-align: center;
+  }
+
+  .user {
+    margin-left: 50px;
+    justify-content: center;
+    color: #fff;
+    font-family: Neue Machina, sans-serif;
+    font-weight: 300;
+    text-align: center;
+  }
+  .username {
+    font-size: 40px;
+  }
+
+  .profile-picture-cont {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    height: 100%;
+    box-sizing: border-box;
+  }
+  .profile-picture {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #fff;
+    font-size: 26px;
+    font-family: Neue Machina, sans-serif;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: underline;
+  }
+
+  .edit,
+  .change,
+  .trash,
+  .remove,
+  .sign-out-icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #fff;
+    font-size: 22px;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .profile-pic {
+    width: 120px;
+    border-radius: 50%;
+    height: 100%;
+  }
+  .sign-out-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #fff;
+    font-size: 30px;
+  }
+  .sign-out {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 300;
+    text-align: center;
+    font-weight: bold;
+  }
+}

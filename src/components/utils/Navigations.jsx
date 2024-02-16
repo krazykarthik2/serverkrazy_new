@@ -6,7 +6,7 @@ function Back({className , to = ".."}) {
   return (
     <div className={className}>
       <Link to={to} className="back" accessKey="b">
-        <FontAwesomeIcon icon={faArrowLeft} size="2x" />
+        <FontAwesomeIcon icon={faArrowLeft} size="2x" className="text-white"/>
       </Link>
     </div>
   );

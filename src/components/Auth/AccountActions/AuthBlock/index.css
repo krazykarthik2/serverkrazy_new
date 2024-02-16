@@ -1,0 +1,66 @@
+.auth-block {
+  font-size: 23px;
+  color: white;
+  font-family: Neue Machina;
+  font-weight:bold;
+  .auth-header {
+    font-size: 35px;
+  }
+  .lock-icon {
+  }
+  .glass-bg {
+    background-color: var(--glass);
+    backdrop-filter: blur(var(--blur));
+    border-radius: 20px;
+
+  }
+  .google{
+    color:#1c1c1c;
+  }
+  .facebook{
+    color:#4267b2;
+  }
+  .auth-items {
+    display: flex;
+    padding:10px;
+    padding-top:20px;
+  }
+  .glass-btn {
+    text-decoration: none;
+    background-color: var(--glass);
+    backdrop-filter: blur(var(--blur));
+    border-radius: 40px;
+    padding:7px 30px;
+  }
+  .social-item-name {
+    text-align: left;
+    font-size: 18px;
+    font-weight: bold;
+    color: inherit;
+  }
+  .google-icon,
+  .facebook-icon,
+  .key-icon {
+    font-size: 35px;
+  }
+  .auth-items{
+    max-width:800px;
+  }
+  @media screen and (max-width: 900px) {
+   .auth-items{
+     flex-direction: column;
+   } 
+   .google,.facebook,.password{
+     padding: 5px 20px;
+   }
+   .auth-items{
+    padding:7px 20px;
+    padding-top:20px;
+    max-width: 350px;
+   }
+   br{
+    display: none;
+   }
+   
+  }
+}

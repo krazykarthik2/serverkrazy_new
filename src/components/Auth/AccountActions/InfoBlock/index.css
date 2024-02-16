@@ -1,0 +1,33 @@
+.info-block {
+  height: 150px;
+  font-size: 23px;
+  color: #0A436C;
+  font-family: Neue Machina;
+  font-weight: bold;
+  margin-right:80px;
+  .info-head {
+    font-size: 30px;
+  }
+  .glass-bg {
+    background-color: var(--glass);
+    backdrop-filter: blur(var(--blur));
+    border-radius: 20px;
+  }
+  .glass-btn {
+    text-decoration: none;
+    background-color: var(--glass);
+    backdrop-filter: blur(var(--blur));
+    border-radius: 40px;
+    padding: 7px 30px;
+  }
+  .info {
+  }
+  .info-icon {
+  }
+  .last-sign-in,.created-at {
+    font-size: 15px;
+  }
+  .bool-statement {
+  }
+  
+}

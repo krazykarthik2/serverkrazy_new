@@ -4,6 +4,20 @@
 
     --themeColorLight: #bbf54c;
     --themeColorDark: #5c3c98;
+    --glass:#fff4;
+    --blur:5px;
+}
+.w-fit-content{
+    width: fit-content;
+}
+.w-85{
+    width: 85%;
+}
+.h-85{
+    height: 85%;
+}
+.start-75{
+    left: 75%;
 }
 
 body {

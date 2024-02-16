@@ -1,8 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Form, Container, Card, Button, Stack } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+import { firebaseContext } from "../App";
 
-function Sign({hasAccount, firebase}) {
+function Sign({ hasAccount }) {
+  const firebase = useContext(firebaseContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -13,7 +15,7 @@ function Sign({hasAccount, firebase}) {
     // Add your login logic here
     console.log("Logging in with:", email, password);
     console.log(firebase);
-    firebase.signInWithPass(email, password,e=>{
+    firebase.signInWithPass(email, password, (e) => {
       navigate("/");
     });
   };
@@ -21,9 +23,9 @@ function Sign({hasAccount, firebase}) {
     e.preventDefault();
     // Add your signup logic here
     console.log("Signing up with:", email, password);
-    firebase.signUp(email, password,name,null,(e) => {
+    firebase.signUp(email, password, name, null, (e) => {
       navigate("/");
-    }); 
+    });
   };
 
   function handleGoogleLogin() {
@@ -84,7 +86,18 @@ function Sign({hasAccount, firebase}) {
               <div className="smallerItems align-items-center d-flex flex-column gap-2 mt-2">
                 <div className="support ">
                   <div>
-                    {hasAccount && <Form.Text>forgot password?</Form.Text>}
+                    {hasAccount && (
+                      <button
+                        className="btn border-0 outline-0 p-0 m-0"
+                        onClick={() => {
+                          navigate("../forgotpass", {
+                            state: { email },
+                          });
+                        }}
+                      >
+                        forgot password?
+                      </button>
+                    )}
                   </div>{" "}
                   <div>
                     {hasAccount ? (

@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { Back } from "./utils/Navigations";
 import QRScan from "./utils/QRScan";
-function JumpToServer({ server }) {
+import { serverContext } from "./App";
+function JumpToServer() {
+  const server = useContext(serverContext)
   const params_server_url = useParams()["server"];
 
   if (params_server_url) {

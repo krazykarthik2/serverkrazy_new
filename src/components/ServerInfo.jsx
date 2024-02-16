@@ -9,7 +9,9 @@ import React, { useContext } from "react";
 import { Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { Back, To_chat } from "./utils/Navigations";
-function ServerInfo({ server }) {
+import { serverContext } from "./App";
+function ServerInfo() {
+  const server = useContext(serverContext);
   const navigate = useNavigate();
   function stopServer() {
     server.stopServer(() => navigate("/"));

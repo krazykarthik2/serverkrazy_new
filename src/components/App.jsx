@@ -10,6 +10,7 @@ import JumpToServer from "./JumpToServer";
 import ServerInfo from "./ServerInfo";
 import EditProfile from "./Profile/Edit/EditProfile";
 import DeleteAcc from "./Auth/DeleteAcc";
+import ForgotPwd from "./Auth/ForgotPwd";
 const firebaseContext = React.createContext();
 const serverContext = React.createContext();
 const msgBucketContext = React.createContext();
@@ -56,57 +57,33 @@ function App() {
           <msgBucketContext.Provider value={__msgBucket}>
             <BrowserRouter>
               <Routes>
-                <Route
-                  path="/"
-                  element={<Home firebase={__fb} server={__server} />}
-                />
+                <Route path="/" element={<Home />} />
                 <Route path="/server/:server">
-                  <Route path="" element={<ServerInfo server={__server} />} />
-                  <Route
-                    path="chat"
-                    element={
-                      <ServerChat
-                        msgBucket={__msgBucket}
-                        server={__server}
-                        firebase={__fb}
-                      />
-                    }
-                  />
+                  <Route path="" element={<ServerInfo />} />
+                  <Route path="chat" element={<ServerChat />} />
                 </Route>
 
                 <Route path="/auth">
                   <Route path="deleteAcc">
-                    
-                  <Route path="" element={<DeleteAcc />} />
-                  <Route path="continue/:continue" element={<DeleteAcc />} />
+                    <Route path="" element={<DeleteAcc />} />
+                    <Route path="continue/:continue" element={<DeleteAcc />} />
                   </Route>
-                  <Route
-                    path="login"
-                    element={<Sign hasAccount={true} firebase={__fb} />}
-                  />
-                  <Route
-                    path="signup"
-                    element={<Sign hasAccount={false} firebase={__fb} />}
-                  />
-                  <Route
-                    path="changepass"
-                    element={<ChangePwd firebase={__fb} />}
-                  />
-                  <Route
-                    path="actions"
-                    element={<AccountActions firebase={__fb} />}
-                  />
+                  <Route path="login" element={<Sign hasAccount={true} />} />
+                  <Route path="signup" element={<Sign hasAccount={false} />} />
+                  <Route path="changepass" element={<ChangePwd />} />
+                  <Route path="actions" element={<AccountActions />} />
+                  <Route path="forgotpass">
+                    <Route path="" element={<ForgotPwd />} />
+                    <Route path=":email" element={<ForgotPwd />} />
+                  </Route>
                 </Route>
-                <Route path="/profile">
-                  <Route path="" element={<AccountActions firebase={__fb} />} />
+                <Route path="profile">
+                  <Route path="" element={<AccountActions />} />
                   <Route path="edit" element={<EditProfile />} />
                 </Route>
                 <Route path="jump">
-                  <Route path="" element={<JumpToServer server={__server} />} />
-                  <Route
-                    path=":server"
-                    element={<JumpToServer server={__server} />}
-                  />
+                  <Route path="" element={<JumpToServer />} />
+                  <Route path=":server" element={<JumpToServer />} />
                 </Route>
               </Routes>
             </BrowserRouter>

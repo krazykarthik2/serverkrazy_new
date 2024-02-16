@@ -29,6 +29,7 @@ import {
   reload,
   AuthCredential,
   EmailAuthProvider,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import { initializeApp } from "firebase/app";
@@ -113,7 +114,7 @@ class Server {
     this.paramsURL = getParams();
   }
   getLink = () => {
-    return "https://serverkrazy.web.app/server/" + this.serverName;
+    return "https://servercrazy.web.app/jump/" + this.serverName;
   };
   onServChange = () => {};
   onMsgUpdate = () => {};
@@ -528,27 +529,21 @@ class Server {
               .then((res) => {
                 res.items.forEach((item) => {
                   deleteObject(item)
-                    .then(() => {
-                      this.server = null;
-                      this.serverName = "";
-                      this.serverOwner = "";
-                      this.onServChange();
-                      callback();
-                    })
+                    .then(() => {})
                     .catch((err) => {
                       console.log(err);
                       manageErrorFireBase(err);
-                      this.server = null;
-                      this.serverName = "";
-                      this.serverOwner = "";
-                      this.onServChange();
-                      callback();
                     });
                 });
               })
               .catch((err) => {
                 console.log(err);
               });
+            this.server = null;
+            this.serverName = "";
+            this.serverOwner = "";
+            this.onServChange();
+            callback();
           })
           .catch((err) => {
             console.error(err);
@@ -705,6 +700,15 @@ class FBmanage {
       })
       .catch((error) => {});
   };
+  sendPasswordResetEmailtoUser = (email, callback = () => {}) => {
+    sendPasswordResetEmail(firebase.auth(), email)
+      .then(() => {
+        callback();
+      })
+      .catch((err) => {
+        callback();
+      });
+  };
   changePassword = (newPass, oldPass, callback = function () {}) => {
     if (this.credential) {
       reauthenticateWithCredential(this.currentUser, this.credential).then(
@@ -858,7 +862,7 @@ class FBmanage {
         log(result);
         if (result.user) {
           this.credential = GoogleAuthProvider.credentialFromResult(result);
-          this.token = this.credential.accessToken
+          this.token = this.credential.accessToken;
           console.log("token:" + this.token, "cred:" + this.credential);
         }
 

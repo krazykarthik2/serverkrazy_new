@@ -1,8 +1,10 @@
 import React, { useContext, useState } from "react";
 import { Form, Container, Card, Button, Stack } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+import { firebaseContext } from "../App";
 
-function ChangePwd({firebase}) {
+function ChangePwd() {
+  const firebase = useContext(firebaseContext)
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./index.css";
+import "./index.css"
 import defaultProfPic from "../../../../assets/default-profile-pic.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faSignOut, faTrash } from "@fortawesome/free-solid-svg-icons";

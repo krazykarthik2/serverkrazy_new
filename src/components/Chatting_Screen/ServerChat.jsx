@@ -24,7 +24,7 @@ function ServerChat() {
   }
   return (
     <div
-      className="w-100 h-100 vstack "
+      className="vw-100 vh-100 bg-dark text-white vstack "
       style={{
         maxHeight: "100vh",
       }}

@@ -4,6 +4,7 @@ import defaultProfPic from "../../../../assets/default-profile-pic.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faSignOut, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Form, FormControl } from "react-bootstrap";
+import { Link } from "react-router-dom";
 function UserShowingProfile({
   username,
   picture,
@@ -17,10 +18,10 @@ function UserShowingProfile({
         <div className="hello-_user">
           <div className="vstack">
             <div className="hello">hello,</div>
-            <div className="user hstack">
+            <Link to="/profile/edit" className="user hstack">
               <div className="username">{username}</div>
               <FontAwesomeIcon icon={faEdit} className="edit" />
-            </div>
+            </Link>
           </div>
         </div>
         <div className="profile-picture-cont gap-4 flex-wrap align-items-center justify-content-center">

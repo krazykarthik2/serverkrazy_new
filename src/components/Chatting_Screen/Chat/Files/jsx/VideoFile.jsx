@@ -6,10 +6,10 @@ import { Link } from "react-router-dom";
 
 function VideoFile({ msg, index, _fileDelete, url }) {
   return (
-    <div className="w-100 h-100">
+    <div className="w-100">
       <div className="hstack">
         <Button
-          className="delete"
+          className="delete" 
           onClick={() => {
             _fileDelete();
           }}

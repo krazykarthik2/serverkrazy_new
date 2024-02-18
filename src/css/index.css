@@ -7,8 +7,14 @@
     --glass:#fff4;
     --blur:5px;
 }
+img{
+    user-select: none;
+}
 .w-fit-content{
     width: fit-content;
+}
+.h-fit-content{
+    height:fit-content;
 }
 .w-85{
     width: 85%;

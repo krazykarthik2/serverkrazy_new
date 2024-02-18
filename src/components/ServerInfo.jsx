@@ -20,7 +20,7 @@ function ServerInfo() {
     server.exitServer(() => navigate("/"));
   }
   return (
-    <div className="w-100 h-100">
+    <div className="vw-100 vh-100 bg-secondary">
       <div className="d-flex flex-column gap-3">
         <Back />
         <div className="serverInfo">

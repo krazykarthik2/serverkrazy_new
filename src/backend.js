@@ -30,6 +30,8 @@ import {
   AuthCredential,
   EmailAuthProvider,
   sendPasswordResetEmail,
+  updateEmail,
+  verifyBeforeUpdateEmail,
 } from "firebase/auth";
 import { GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import { initializeApp } from "firebase/app";
@@ -643,6 +645,43 @@ class FBmanage {
       }
     }
   };
+  updateEmail = (
+    email,
+    ifNotAuthed = function () {},
+    callback = function () {}
+  ) => {
+    if (this.credential) {
+      verifyBeforeUpdateEmail(this.currentUser, email)
+        .then((e) => {
+          console.log(e);
+          console.log("looks like email sent");
+          callback();
+        })
+        .catch((e) => {
+          if (e.code == "auth/requires-recent-login") {
+            console.log("requires recent login");
+            reauthenticateWithCredential(this.credential)
+              .then(() => {
+                updateEmail(this.currentUser, email, ifNotAuthed, callback);
+              })
+              .catch(manageErrorFireBase);
+          } else {
+            console.log(e);
+            manageErrorFireBase(e);
+          }
+        });
+    } else {
+      console.log("no credential.re auth required");
+      ifNotAuthed();
+    }
+  };
+  updateDisplayName = (displayName, callback = function () {}) => {
+    updateProfile(this.currentUser, { displayName: displayName })
+      .then(() => {
+        callback();
+      })
+      .catch(manageErrorFireBase);
+  };
   updateProviderData = (user) => {
     this.key = user?.uid;
     this.currentUser = user;
@@ -916,6 +955,12 @@ class FBmanage {
       });
   };
 
+  unlinkGoogle = () => {
+    this.unlink("google.com");
+  }
+  unlinkFacebook = () => {
+    this.unlink("facebook.com");
+  }
   unlink = (provId) => {
     unlinkProvider(this.currentUser, provId)
       .then(() => {

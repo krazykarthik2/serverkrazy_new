@@ -3,7 +3,8 @@ import { Await, useAsyncValue } from "react-router-dom";
 import Loading from "../../utils/Loading";
 import { AudioFile, ImageFile, OtherFile, VideoFile } from "../Chat/Files";
 import { useMemo } from "react";
-export function ChatFileAfterLoad({ msg, index, _fileDelete, fileLink }) {
+
+function ChatFile({ msg, index, _fileDelete, downloadURL }) {
   return (
     <>
       {msg.fileType.includes("image") && (
@@ -11,7 +12,7 @@ export function ChatFileAfterLoad({ msg, index, _fileDelete, fileLink }) {
           msg={msg}
           index={index}
           _fileDelete={_fileDelete}
-          url={fileLink}
+          url={downloadURL}
         />
       )}
       {msg.fileType.includes("audio") && (
@@ -19,7 +20,7 @@ export function ChatFileAfterLoad({ msg, index, _fileDelete, fileLink }) {
           msg={msg}
           index={index}
           _fileDelete={_fileDelete}
-          url={fileLink}
+          url={downloadURL}
         />
       )}
       {msg.fileType.includes("video") && (
@@ -27,7 +28,7 @@ export function ChatFileAfterLoad({ msg, index, _fileDelete, fileLink }) {
           msg={msg}
           index={index}
           _fileDelete={_fileDelete}
-          url={fileLink}
+          url={downloadURL}
         />
       )}
       {["image", "audio", "video"].findIndex((x) => msg.fileType.includes(x)) !=
@@ -36,21 +37,10 @@ export function ChatFileAfterLoad({ msg, index, _fileDelete, fileLink }) {
           msg={msg}
           index={index}
           _fileDelete={_fileDelete}
-          url={fileLink}
+          url={downloadURL}
         />
       )}
     </>
-  );
-}
-
-function ChatFile({ msg, index, _fileDelete, downloadURL }) {
-  return (
-    <ChatFileAfterLoad
-      msg={msg}
-      index={index}  
-      _fileDelete={_fileDelete}
-      fileLink={downloadURL}
-    />
   );
 }
 export default ChatFile;

@@ -20,14 +20,37 @@ function AccountActions() {
       });
     }
   }
-  function handleLinkGoogle() {}
-  function handleLinkFacebook() {}
-  function handleUnlinkGoogle() {}
-  function handleUnlinkFacebook() {}
-  function handleDeleteAcc() {}
-  function handleUserNameChange() {}
-  function handleProfilePicChange() {}
-  function handleProfilePicRemove() {}
+  function handleLinkGoogle() {
+    if(firebase?.currentUser) {
+      firebase.linkGoogle();
+    }
+  }
+  function handleLinkFacebook() {
+    if(firebase?.currentUser) {
+      firebase.linkFacebook();
+    }
+  }
+  function handleUnlinkGoogle() {
+    if(firebase?.currentUser) {
+      firebase.unlinkGoogle();
+    }
+  }
+  function handleUnlinkFacebook() {
+    if(firebase?.currentUser) {
+      firebase.unlinkFacebook();
+    }
+  }
+
+  function handleProfilePicChange(file,callback=function() {}) {
+    if (firebase?.currentUser) {
+      firebase.updatePhoto(file,callback);
+    }
+  }
+  function handleProfilePicRemove() {
+    if (firebase?.currentUser) {
+      firebase.removeProfilePic();
+    }
+  }
   const [lastSignInTime, setLastSignInTime] = useState(null);
   const [createdAt, setCreatedAt] = useState(null);
 
@@ -43,14 +66,14 @@ function AccountActions() {
   }, [firebase]);
 
   return (
-    <div className="accountactions w-100 vh-100 overflow-y-auto overflow-hidden  bg-secondary">
+    <div className="accountactions user-select-none w-100 vh-100 overflow-y-auto overflow-hidden  bg-secondary">
       <div className="vstack">
         <Back to="/" />
         <div className="mb-2">
           <UserShowingProfile
             username={firebase?.currentUser?.displayName}
             picture={firebase?.currentUser?.photoURL}
-            onEditUserName={handleUserNameChange}
+           
             onRemoveProfilePic={handleProfilePicRemove}
             onEditProfilePic={handleProfilePicChange}
             onSignout={handleSignOut}
@@ -84,8 +107,8 @@ function AccountActions() {
             {[
               { head: "email", tail: firebase?.currentUser?.email },
               { head: "uid", tail: firebase?.currentUser?.uid },
-            ].map((e) => (
-              <div className="hstack">
+            ].map((e,i) => (
+              <div className="hstack" key={i}>
                 <div className="head">{e.head}</div>:
                 <div className="tail">{e.tail}</div>
               </div>

@@ -3,14 +3,14 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { fb, msgBucket, server } from "../frontend";
 import AccountActions from "./Auth/AccountActions";
 import ChangePwd from "./Auth/ChangePwd";
+import DeleteAcc from "./Auth/DeleteAcc";
+import ForgotPwd from "./Auth/ForgotPwd";
+import ProfileActions from "./Auth/ProfileActions";
 import Sign from "./Auth/Sign";
 import ServerChat from "./Chatting_Screen/ServerChat";
 import Home from "./Home";
 import JumpToServer from "./JumpToServer";
 import ServerInfo from "./ServerInfo";
-import EditProfile from "./Profile/Edit/EditProfile";
-import DeleteAcc from "./Auth/DeleteAcc";
-import ForgotPwd from "./Auth/ForgotPwd";
 const firebaseContext = React.createContext();
 const serverContext = React.createContext();
 const msgBucketContext = React.createContext();
@@ -79,7 +79,7 @@ function App() {
                 </Route>
                 <Route path="profile">
                   <Route path="" element={<AccountActions />} />
-                  <Route path="edit" element={<EditProfile />} />
+                  <Route path="edit" element={<ProfileActions />} />
                 </Route>
                 <Route path="jump">
                   <Route path="" element={<JumpToServer />} />
@@ -96,3 +96,4 @@ function App() {
 
 export default App;
 export { firebaseContext, msgBucketContext, serverContext };
+

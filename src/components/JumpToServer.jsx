@@ -4,8 +4,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Back } from "./utils/Navigations";
 import QRScan from "./utils/QRScan";
 import { serverContext } from "./App";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
 function JumpToServer() {
-  const server = useContext(serverContext)
+  const server = useContext(serverContext);
   const params_server_url = useParams()["server"];
 
   if (params_server_url) {
@@ -15,11 +17,14 @@ function JumpToServer() {
 
   const [serverName, setServerName] = useState("");
   const navigate = useNavigate();
+  function isValidServerName(sname) {
+    return sname.length == 8;
+  }
   function tryServer(sname) {
     let s_name = validateServerName(sname);
-    if (s_name.length == 8)
+    if (isValidServerName(s_name))
       server.jumpToServer(s_name, (e) => {
-        if (e) navigate("/server/" + s_name+"/chat");
+        if (e) navigate("/server/" + s_name + "/chat");
       });
   }
   function validateServerName(e) {
@@ -50,12 +55,19 @@ function JumpToServer() {
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formServerName">
           <Form.Label>Server Name</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter Server Name"
-            value={serverName}
-            onChange={(e) => setServerName(e.target.value)}
-          />
+          <div className="hstack">
+            <Form.Control
+              type="text"
+              placeholder="Enter Server Name"
+              value={serverName}
+              onChange={(e) => setServerName(e.target.value)}
+              autoComplete="off"
+              required
+              maxLength={8}
+              minLength={8}
+            />
+            <FontAwesomeIcon icon={faCheck} className={isValidServerName(serverName)?"opacity-100":"opacity-0"}/>
+          </div>
         </Form.Group>
         <Button variant="primary" type="submit">
           Submit

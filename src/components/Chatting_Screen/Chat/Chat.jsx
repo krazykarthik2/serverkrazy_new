@@ -7,7 +7,7 @@ import React from "react";
 import { Button, Stack } from "react-bootstrap";
 function Chat({ msg, index, _delete }) {
   return (
-    <div className="w-100 h-100">
+    <div className="w-100">
       <div className="hstack">
         <Button
     

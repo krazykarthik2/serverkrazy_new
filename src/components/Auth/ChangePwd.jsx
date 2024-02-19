@@ -3,6 +3,12 @@ import { Form, Container, Card, Button, Stack } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { firebaseContext } from "../App";
 
+/**
+ * Change user password in the UI and in the Firebase backend.
+ *
+ * @param {object} e - The event object.
+ * @return {void} 
+ */
 function ChangePwd() {
   const firebase = useContext(firebaseContext)
   const [oldPassword, setOldPassword] = useState("");

@@ -9,7 +9,8 @@ import { Link } from "react-router-dom";
 import { firebaseContext, serverContext, msgBucketContext } from "../App";
 import { ServerInfoHeading } from "./ServerInfoHeading";
 import { Chatting } from "./Chatting";
-import { InputType } from "./InputType";
+
+import InputType from "./InputType";
 import {_delete, _fileDelete} from "../../backend";
 function ServerChat() {
   // { firebase, server, msgBucket }

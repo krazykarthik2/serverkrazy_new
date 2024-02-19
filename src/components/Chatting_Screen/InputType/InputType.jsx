@@ -14,7 +14,8 @@ import {
   faSmile,
   faVideo,
 } from "@fortawesome/free-solid-svg-icons";
-import { isMobile } from "../../utilites";
+import { isMobile } from "../../../utilites";
+import InputElement from "./InputElement";
 
 const emojis_raw = ["😊", "😂", "🤣"];
 function givemeSet(emojis, n) {
@@ -27,7 +28,7 @@ function givemeSet(emojis, n) {
   return emojiArrays;
 }
 let emojiSet = givemeSet(emojis_raw, 5);
-export function InputType({ server, className }) {
+function InputType({ server, className }) {
   const [msg, setMsg] = useState("");
   const [fileShareVisible, setFileShareVisible] = useState(false);
   const [emojiVisible, setEmojiVisible] = useState(false); // [setEmojiVisible]
@@ -39,6 +40,7 @@ export function InputType({ server, className }) {
     server.sendLocation(msg);
   }
   function handleMsgInput(e) {
+    console.log(e);
     e.preventDefault();
     if (!msg) return;
     server.sendMessage(msg);
@@ -162,17 +164,7 @@ export function InputType({ server, className }) {
           >
             <FontAwesomeIcon icon={faSmile} size="2x" color="#56f" />
           </Button>
-          <Form.Group className="w-100" controlId="ControlInput1">
-            <Form.Label>Enter Message</Form.Label>
-            <Form.Control
-              multiple
-              type="text"
-              placeholder="Enter Message"
-              autoFocus
-              value={msg}
-              onChange={(e) => setMsg(e.target.value)}
-            />
-          </Form.Group>
+          <InputElement {...{ msg, setMsg, handleMsgInput }} />
           <Button
             className="rounded-circle p-2 bg-transparent d-flex align-items-center justify-content-center border-0"
             onClick={() => {
@@ -194,3 +186,5 @@ export function InputType({ server, className }) {
     </div>
   );
 }
+
+export default InputType;

@@ -12,7 +12,7 @@ import { firebaseContext } from "../../App";
 import {
   Floating_Control_Label,
   Floating_Password_Label,
-} from "../../utils/FormComp"; 
+} from "../../utils/FormComp";
 import "./index.css";
 import { faFacebook, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -24,12 +24,11 @@ function Sign({ hasAccount }) {
   const [continue__, setContinue__] = useState("");
   const location = useLocation();
   function afterSignUp() {
-    if (continue__) {
-      navigate("/" + continue__.split(">").join("/"),{...location.state});
-    } else navigate("/");
+    
+      navigate(continue__?continue__:"/", {state:{ ...location.state, continue__: null }});
+    
   }
   useEffect(() => {
-    
     if (location.state?.continue__) {
       setContinue__(location.state.continue__);
     }

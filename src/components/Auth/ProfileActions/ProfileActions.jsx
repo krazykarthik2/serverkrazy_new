@@ -15,12 +15,13 @@ function ProfileActions() {
     setUsername(firebase?.currentUser?.displayName);
     setEmail(firebase?.currentUser?.email);
   }, [firebase]);
+  window.navigate = navigate
   function notRecentlyAuthed() {
     console.log("not recently authed");
     navigate("/auth/login", {
       state: {
         emailToBeResetTo: firebase?.currentUser?.email,
-        continue__: "profile>edit",
+        continue__: "/profile/edit",
       },
     });
   }

@@ -232,7 +232,7 @@ class Server {
     }
   };
 
-  createServer = (callback = function () {}) => {
+  createServer = (ifNotAuthed=function(){},callback = function () {}) => {
     if (this.server != null) {
       alert("server exists");
     } else {
@@ -261,6 +261,7 @@ class Server {
           );
         } else {
           alert("Log in to continue....");
+          ifNotAuthed();
         }
     }
   };
@@ -306,7 +307,7 @@ class Server {
       this.handlemsgDelete(data.key);
     });
   };
-  jumpToServer = (server_shared_name, callback = function () {}) => {
+  jumpToServer = (server_shared_name,ifNotAuthed=function(){}, callback = function () {}) => {
     if (this.server != null) {
       alert("server exists");
       return false;
@@ -338,6 +339,7 @@ class Server {
           );
         } else {
           alert("log in to continue....");
+          ifNotAuthed();
         }
       }
       return false;
@@ -1025,7 +1027,7 @@ class FBmanage {
     error = function () {}
   ) => {
     let uploadTask = uploadBytesResumable(
-      refStorage(firebase.storage(), "profPic/" + getRandomString(5)),
+      refStorage(firebase.storage(), "profPic/" + this.currentUser.uid),
       log(file)
     );
 

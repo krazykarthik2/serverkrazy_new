@@ -1,3 +1,7 @@
+# Readme for Serverkrazy
+
+supposed to look like [figma link](https://www.figma.com/file/vgViKOhUQf6TKuzAZeB8uU/servercrazyReact?type=design&node-id=0%3A1&mode=design&t=BRvPrgqnY5sFfFUE-1)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

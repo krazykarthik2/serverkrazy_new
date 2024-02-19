@@ -9,9 +9,6 @@ function Home() {
   const firebase = useContext(firebaseContext);
   const server = useContext(serverContext);
   const location = useLocation();
-  const [serverCreated, setServerCreated] = useState(
-    server.serverName  ? true : false
-  );
 
   useEffect(() => {
     console.log(location);
@@ -31,9 +28,8 @@ function Home() {
   }
   function createServer() {
     console.log("creating server");
-    if (!serverCreated) {
+    if (!server.server) {
       server.createServer(()=>{handleNotAuthed();}, (e) => navigate("/server/" + e));
-      setServerCreated(true);
     }
     console.log("server created" + server.serverName);
   }

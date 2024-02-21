@@ -1,17 +1,24 @@
-import { faEdit, faQrcode, faSignOut } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEdit,
+  faSignOut,
+  faTerminal,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useEffect, useState } from "react";
 import { Button, Card } from "react-bootstrap";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { firebaseContext, serverContext } from "./App";
+import { TerminalCxt, firebaseContext, serverContext } from "./App";
+import Terminal from "./Terminal/Terminal";
 import { To_chat } from "./utils/Navigations";
 function Home() {
   const firebase = useContext(firebaseContext);
   const server = useContext(serverContext);
-  const location = useLocation();
-
+  const location = useLocation(); 
+  const terminalCxt = useContext(TerminalCxt);
+  function setTerminalVisibility(e) {
+    terminalCxt.setTerminalVisibility(e);
+  }
   useEffect(() => {
-    console.log(location);
     if (location.state?.serverToBeCreated == true) {
       createServer();
     }
@@ -29,7 +36,12 @@ function Home() {
   function createServer() {
     console.log("creating server");
     if (!server.server) {
-      server.createServer(()=>{handleNotAuthed();}, (e) => navigate("/server/" + e));
+      server.createServer(
+        () => {
+          handleNotAuthed();
+        },
+        (e) => navigate("/server/" + e)
+      );
     }
     console.log("server created" + server.serverName);
   }
@@ -52,7 +64,7 @@ function Home() {
             </div>
             <div className="d-flex justify-content-end">
               <div className="actions hstack gap-5 ml-auto">
-                <Link to={"/auth/actions"}>
+                <Link to={"/auth/actions"} accessKey="x">
                   <div className="edit">
                     <FontAwesomeIcon icon={faEdit} size="3x" />
                   </div>{" "}
@@ -91,10 +103,21 @@ function Home() {
             >
               Jump to Server
             </Link>
-            <Link to={"/jump"} className="btn btn-primary rounded-3">
-              <FontAwesomeIcon icon={faQrcode} size="6x" />
-            </Link>
           </div>
+        )}
+        {terminalCxt.isVisible ? (
+          <Terminal prompt={"$home>"} />
+        ) : (
+          <Button
+            onClick={() => {
+              setTerminalVisibility(true);
+            }}
+            accessKey="t"
+          >
+            <div className="terminal-btn">
+              <FontAwesomeIcon icon={faTerminal} size="2x" />
+            </div>
+          </Button>
         )}
       </div>
     </>

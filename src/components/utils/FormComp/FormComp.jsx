@@ -41,8 +41,8 @@ function Floating_Password_Label({
   return (
     <>
       {" "}
-      <div className="float-pass-label hstack w-100">
-        <FloatingLabel label={label} controlId={id} className="w-100">
+      <div className="float-pass-label hstack w-100 position-relative">
+        <FloatingLabel label={label} controlId={id} className="w-100"> 
           <FormControl
             type={show ? "text" : "password"}
             className={"w-100 " + className}
@@ -50,7 +50,7 @@ function Floating_Password_Label({
           />
 
         </FloatingLabel>
-          <button onClick={() => setShow((e) => !e)} className="d-inline btn outline-0 border-0">
+          <button onClick={() => setShow((e) => !e)} className="d-inline position-absolute translate-middle-y top-50 end-0 btn outline-0 border-0">
             <FontAwesomeIcon icon={show ? faEyeSlash : faEye} />
           </button>
       </div>

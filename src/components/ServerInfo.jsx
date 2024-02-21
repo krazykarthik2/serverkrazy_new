@@ -3,15 +3,21 @@ import {
   faCopy,
   faShareAlt,
   faShareNodes,
+  faTerminal,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext } from "react";
 import { Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { Back, To_chat } from "./utils/Navigations";
-import { serverContext } from "./App";
+import { TerminalCxt, serverContext } from "./App";
+import Terminal from "./Terminal/Terminal";
 function ServerInfo() {
   const server = useContext(serverContext);
+  const terminalCxt = useContext(TerminalCxt);
+  function setTerminalVisibility(e) {
+    terminalCxt.setTerminalVisibility(e);
+  }
   const navigate = useNavigate();
   function stopServer() {
     server.stopServer(() => navigate("/"));
@@ -66,6 +72,20 @@ function ServerInfo() {
             <To_chat serverName={server.serverName} />
           </div>
         </div>
+        {terminalCxt.isVisible ? (
+          <Terminal prompt={"$home>"} />
+        ) : (
+          <Button
+            onClick={() => {
+              setTerminalVisibility(true);
+            }}
+            accessKey="T"
+          >
+            <div className="terminal-btn">
+              <FontAwesomeIcon icon={faTerminal} size="2x" />
+            </div>
+          </Button>
+        )}
       </div>
     </div>
   );

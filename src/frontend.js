@@ -9,13 +9,13 @@ console.log(fb);
 fb.init();
 
 fb.whenSignOut = () => {
-  // if (
-  //   window.location.pathname == "/auth/login" ||
-  //   window.location.pathname == "/auth/signup"
-  // ) {
-  // } else {
-  //   window.location.pathname = "/auth/login";
-  // }
+  if (
+    window.location.pathname == "/auth/login" ||
+    window.location.pathname == "/auth/signup"
+  ) {
+  } else {
+    window.location.pathname = "/auth/login";
+  }
 };
 let msgBucket = [];
 let server = new Server(fb, msgBucket);

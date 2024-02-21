@@ -18,7 +18,7 @@ function UserShowingProfile({
         <div className="hello-_user">
           <div className="vstack">
             <div className="hello">hello,</div>
-            <Link to="/profile/edit" className="user hstack">
+            <Link to="/profile/edit" className="user hstack" accessKey="x">
               <div className="username">{username}</div>
               <FontAwesomeIcon icon={faEdit} className="edit" />
             </Link>
@@ -44,10 +44,10 @@ function UserShowingProfile({
             className="profile-pic"
           />
           <div className="h-100 d-flex align-items-center justify-content-center">
-            <div className="sign-out-block ">
+            <button className="sign-out-block btn border-0 flex-center" onClick={onSignout}>
               <FontAwesomeIcon icon={faSignOut} className="sign-out-icon" />
               <div className="sign-out">sign out</div>
-            </div>
+            </button>
           </div>
         </div>
       </div>

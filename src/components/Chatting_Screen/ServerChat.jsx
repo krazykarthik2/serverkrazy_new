@@ -11,7 +11,7 @@ import { ServerInfoHeading } from "./ServerInfoHeading";
 import { Chatting } from "./Chatting";
 
 import InputType from "./InputType";
-import {_delete, _fileDelete} from "../../backend";
+import { _delete, _fileDelete } from "../../backend";
 function ServerChat() {
   // { firebase, server, msgBucket }
   const firebase = useContext(firebaseContext);
@@ -36,7 +36,7 @@ function ServerChat() {
         className="w-100 "
       />
       <Chatting
-        msgBucket={msgBucket.filter(e=>e)}
+        msgBucket={msgBucket.filter((e) => e)}
         className="w-100  overflow-auto"
         _delete={handleDelete}
         _fileDelete={handleFileDelete}

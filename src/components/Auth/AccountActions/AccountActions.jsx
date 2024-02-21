@@ -16,34 +16,34 @@ function AccountActions() {
   function handleSignOut() {
     if (firebase?.currentUser) {
       firebase.signout((e) => {
-        navigate("/auth/login");
+        if (e) navigate("/auth/login");
       });
     }
   }
   function handleLinkGoogle() {
-    if(firebase?.currentUser) {
+    if (firebase?.currentUser) {
       firebase.linkGoogle();
     }
   }
   function handleLinkFacebook() {
-    if(firebase?.currentUser) {
+    if (firebase?.currentUser) {
       firebase.linkFacebook();
     }
   }
   function handleUnlinkGoogle() {
-    if(firebase?.currentUser) {
+    if (firebase?.currentUser) {
       firebase.unlinkGoogle();
     }
   }
   function handleUnlinkFacebook() {
-    if(firebase?.currentUser) {
+    if (firebase?.currentUser) {
       firebase.unlinkFacebook();
     }
   }
 
-  function handleProfilePicChange(file,callback=function() {}) {
+  function handleProfilePicChange(file, callback = function () {}) {
     if (firebase?.currentUser) {
-      firebase.updatePhoto(file,callback);
+      firebase.updatePhoto(file, callback);
     }
   }
   function handleProfilePicRemove() {
@@ -73,7 +73,6 @@ function AccountActions() {
           <UserShowingProfile
             username={firebase?.currentUser?.displayName}
             picture={firebase?.currentUser?.photoURL}
-           
             onRemoveProfilePic={handleProfilePicRemove}
             onEditProfilePic={handleProfilePicChange}
             onSignout={handleSignOut}
@@ -107,7 +106,7 @@ function AccountActions() {
             {[
               { head: "email", tail: firebase?.currentUser?.email },
               { head: "uid", tail: firebase?.currentUser?.uid },
-            ].map((e,i) => (
+            ].map((e, i) => (
               <div className="hstack" key={i}>
                 <div className="head">{e.head}</div>:
                 <div className="tail">{e.tail}</div>

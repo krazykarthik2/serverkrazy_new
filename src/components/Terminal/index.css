@@ -1,0 +1,17 @@
+.terminal {
+  .terminal-code {
+    .terminal-input:first-word {
+      font-weight: bold;
+      color: #0a436c;
+      font-size: larger;
+    }
+  }
+  background: #1c1c1c;
+  color: #faf9f6;
+  .terminal-btn {
+    color: #faf9f6;
+  }
+  .index_terminal__teubZ {
+    background-color: transparent !important;
+  }
+}

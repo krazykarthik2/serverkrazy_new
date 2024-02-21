@@ -24,9 +24,9 @@ function Sign({ hasAccount }) {
   const [continue__, setContinue__] = useState("");
   const location = useLocation();
   function afterSignUp() {
-    
-      navigate(continue__?continue__:"/", {state:{ ...location.state, continue__: null }});
-    
+    navigate(continue__ ? continue__ : "/", {
+      state: { ...location.state, continue__: null },
+    });
   }
   useEffect(() => {
     if (location.state?.continue__) {

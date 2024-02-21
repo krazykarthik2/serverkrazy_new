@@ -328,10 +328,8 @@ class Server {
                 return true;
               } else {
                 alert("Server doesn`t exist");
-                this.onServChange();
-
+                console.log("callback is "+callback)
                 callback(false);
-
                 return false;
               }
             },
@@ -356,6 +354,9 @@ class Server {
       );
       this.getSnapshot(snapshot.task);
     }
+  }
+  isMyServer = () => {
+    return  (this.serverOwner == this.fbobj.currentUser.uid) 
   }
   isMine = (sender) => {
     if (sender == this.fbobj.currentUser.uid) return "me";
@@ -434,7 +435,7 @@ class Server {
       }
     }
   };
-  sendLocation = (message_to_be_sent) => {
+  sendLocation = (message_to_be_sent="") => {
     if (this.fbobj.currentUser != null) {
       if (this.server != null) {
         this.getLocation(null, (coords) => {
@@ -547,7 +548,7 @@ class Server {
             this.serverName = "";
             this.serverOwner = "";
             this.onServChange();
-            callback();
+            callback(true);
           })
           .catch((err) => {
             console.error(err);
@@ -555,7 +556,7 @@ class Server {
             this.serverName = "";
             this.serverOwner = "";
             this.onServChange();
-            callback();
+            callback(false);
           });
       else {
         this.server = null;

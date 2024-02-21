@@ -1,4 +1,5 @@
 .terminal {
+  font-family: "JetBrains Mono";
   .terminal-code {
     .terminal-input:first-word {
       font-weight: bold;
@@ -13,5 +14,11 @@
   }
   .index_terminal__teubZ {
     background-color: transparent !important;
+    font-family: "JetBrains Mono";
+  }
+  #terminalEditor {
+    font-family: "JetBrains Mono";
+    color: #faf9f6;
+    font-weight: 100;
   }
 }

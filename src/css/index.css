@@ -7,6 +7,14 @@
     --glass:#fff4;
     --blur:5px;
 }
+@font-face {
+    font-family: JetBrains Mono;
+    src: url("/src/assets/fonts/JetBrainsMono-Regular.woff2");
+}
+@font-face {
+    font-family: Neue Machina;
+    src: url("/src/assets/fonts/Neue-Machina.woff");
+}
 img{
     user-select: none;
 }

@@ -13,7 +13,7 @@ import { To_chat } from "./utils/Navigations";
 function Home() {
   const firebase = useContext(firebaseContext);
   const server = useContext(serverContext);
-  const location = useLocation(); 
+  const location = useLocation();
   const terminalCxt = useContext(TerminalCxt);
   function setTerminalVisibility(e) {
     terminalCxt.setTerminalVisibility(e);
@@ -81,9 +81,11 @@ function Home() {
         {server.server ? (
           <div className="flex flex-column">
             <div className="display-1">{server.serverName}</div>
-
-            <Button onClick={() => handleStop()}>Stop </Button>
-            <Button onClick={() => handleExit()}>Exit </Button>
+            {server.isMyServer() ? (
+              <Button onClick={() => handleStop()}>Stop </Button>
+            ) : (
+              <Button onClick={() => handleExit()}>Exit </Button>
+            )}
 
             <To_chat serverName={server.serverName} />
           </div>

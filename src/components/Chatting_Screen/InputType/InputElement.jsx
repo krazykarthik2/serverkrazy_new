@@ -15,7 +15,7 @@ function InputElement({ msg, setMsg, handleMsgInput }) {
         onBlur={() => setIsFocused(false)}
         onChange={(e) => setMsg(e.target.value)}
         value={msg}
-        accessKey="T"
+        accessKey="y" 
         onKeyDown={(e) => {
           if (e.key == "Enter") {
             if (e.shiftKey || e.altKey) {

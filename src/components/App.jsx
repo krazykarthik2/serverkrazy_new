@@ -12,6 +12,7 @@ import Home from "./Home";
 import JumpToServer from "./JumpToServer";
 import ServerInfo from "./ServerInfo";
 import { TerminalContextProvider } from "react-terminal";
+import { Cookies, useCookies, withCookies } from "react-cookie";
 const firebaseContext = React.createContext();
 const serverContext = React.createContext();
 const msgBucketContext = React.createContext();
@@ -26,10 +27,24 @@ function App() {
     setTerminalDetails((e) => {
       return { ...e, isVisible: visibility };
     });
-    
   }
-  window._ = { __fb, __server, __msgBucket };
-
+  const [cookies, setCookies] = useCookies(["serverName"]);
+  window._ = { __fb, __server, __msgBucket ,cookies};
+  function setServCookie(serverName) {
+    setCookies("serverName", serverName, { path: "/" });
+  }
+  const afterLoginTasks = [];
+  function afterLogin(e) {
+    afterLoginTasks.push(e);
+  }
+  server.setServCookie = setServCookie;
+  useEffect(() => {
+    if (cookies.serverName && !server.server) {
+      afterLogin(() => {
+        server.jumpToServer(cookies.serverName);
+      });
+    }
+  }, [cookies]);
   useEffect(() => {
     const handleServerChange = () => {
       setServer({ ...server });
@@ -37,6 +52,11 @@ function App() {
     };
 
     const handleFbUpdate = () => {
+      if (fb.currentUser != null) {
+        if (afterLoginTasks.length > 0) {
+          afterLoginTasks.forEach((e) => e());
+        }
+      }
       setFb({ ...fb });
       console.log("triggered firebase change @App.js");
     };
@@ -47,12 +67,12 @@ function App() {
       console.log("triggered bucket change @App.js");
     };
 
-    server.onServChange = handleServerChange;
+    server.onServerChange = handleServerChange;
     fb.onUpdate = handleFbUpdate;
     server.onMsgUpdate = handleMsgUpdate;
 
     return () => {
-      server.onServChange = null;
+      server.onServerChange = null;
       fb.onUpdate = null;
       server.onMsgUpdate = null;
     };

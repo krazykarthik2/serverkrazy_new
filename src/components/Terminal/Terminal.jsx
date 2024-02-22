@@ -6,6 +6,7 @@ import { ReactTerminal } from "react-terminal";
 import { TerminalCxt, firebaseContext, serverContext } from "../App";
 import "./index.css";
 import smallCommands from "./SmallCommands";
+import { shareServer, shareThis } from "../utils/js/utils";
 function Terminal({ close = function () {}, prompt }) {
   const firebase = useContext(firebaseContext);
   const server = useContext(serverContext);
@@ -17,7 +18,12 @@ function Terminal({ close = function () {}, prompt }) {
     close();
   }
   function bye() {
-    if (server.server) server.stopServer();
+    if (server.server) {
+      if (server.isMyServer()) {
+        server.stopServer();
+      }
+      server.exitServer();
+    }
     firebase.signout();
     _close();
   }
@@ -28,6 +34,7 @@ function Terminal({ close = function () {}, prompt }) {
   }
   function server_details() {
     if (server.server) {
+      navigate("/server/" + server.serverName);
       return (
         <>
           server name: {server.serverName}
@@ -51,13 +58,19 @@ function Terminal({ close = function () {}, prompt }) {
       );
     }
   }
+  function home() {
+    navigate("/");
+  }
   function create_server() {
     if (!server.server) {
       server.createServer(
         () => {
           return <>login first to continue...</>;
         },
-        (e) => navigate("/server/" + e)
+        (e) => {
+          navigate("/server/" + e);
+          return "server created";
+        }
       );
     } else return "server already exists";
   }
@@ -94,12 +107,18 @@ function Terminal({ close = function () {}, prompt }) {
     if (server.server) {
       if (!location.pathname.includes("/chat")) {
         navigate("/server/" + server.serverName + "/chat");
-        server.sendMessage(x);
       }
+      server.sendMessage(x);
     } else return "server doesn't exist";
   }
   function send_location() {
-    server.sendLocation();
+    if (server.server) {
+      server.sendLocation();
+      return "sent location";
+    } else return "server doesn't exist";
+  }
+  function refresh() {
+    window.location.reload();
   }
   function ifNotAuthed() {
     console.log("not authed");
@@ -118,10 +137,41 @@ function Terminal({ close = function () {}, prompt }) {
       return <>navigating to jump...</>;
     }
   }
+  function help_guides() {
+    navigate("/guides/terminal");
+  }
+
   async function copy_server_name() {
     await navigator.clipboard.writeText(server.serverName);
     return <>copied!</>;
   }
+  async function copy_server_link() {
+    await navigator.clipboard.writeText(server.getLink());
+    return <>copied!</>;
+  }
+  function edit_profile() {
+    navigate("/profile/edit");
+  }
+  function edit_auth() {
+    navigate("/auth/actions");
+  }
+  function login() {
+    navigate("/auth/login");
+  }
+  function signout() {
+    firebase.signout();
+  }
+  function signup() {
+    navigate("/auth/signup");
+  }
+  function share() {
+    if (server.server) shareServer();
+    else shareThis();
+  }
+  function this_share() {
+    shareThis();
+  }
+
   const commands__ = {
     clear: () => {
       console.log("clearing");
@@ -130,50 +180,77 @@ function Terminal({ close = function () {}, prompt }) {
       console.log("clearing");
     },
     "": () => {},
-    help: () => {
-      navigate("/guides/terminal");
+    ...{
+      help: help_guides,
+      guides: help_guides,
     },
     ...{
       go: go,
+      chat: go,
       next: go,
       back: back,
+      home: home,
+      refresh: refresh,
     },
     ...{
       server: server_details,
+      ["server.info"]: server_details,
       create: create_server,
+      ["server.create"]: create_server,
       stop: stop_server,
+      ["server.stop"]: stop_server,
       jump: jump,
+      ["server.jump"]: jump,
     },
     ...{
       copy_name: copy_server_name,
+      copy_link: copy_server_link,
+      share: share,
+      ["this.share"]: this_share,
     },
     ...{
       send: send,
+      ["chat.send"]: send,
+      ["chat.send.location"]: send_location,
       send_location: send_location,
     },
     ...{
-      exit: () => _close(),
-      close: () => _close(),
-      quit: () => _close(),
-      kill: () => _close(),
+      ["profile.edit"]: edit_profile,
+      ["auth.edit"]: edit_auth,
+      ["auth.login"]: login,
+      login: login,
+      ["auth.logout"]: signout,
+      signout: signout,
+      ["auth.signup"]: signup,
+      signup: signup,
+      ["auth.signout"]: signout,
+      signout: signout,
     },
-    bye: () => bye(),
     ...{
-      die: () => shutdown(),
-      shutdown: () => shutdown(),
+      exit: _close,
+      close: _close,
+      quit: _close,
+    },
+    ...{
+      bye: bye,
+      kill: bye,
+      die: shutdown,
+      shutdown: shutdown,
     },
     ...smallCommands,
   };
   const textboxRef = useRef();
   return (
     <div
-      className="vstack terminal"
+      className="vstack terminal  user-select-none"
       onClick={() => {
         textboxRef?.current?.focus();
       }}
     >
       <div className="hstack justify-content-between">
-        <div className="heading">Terminal</div>
+        <div className="heading">
+          <u>T</u>erminal
+        </div>
         <div className="next hstack gap-2">
           <div className="sub">for the nerds</div>
           <button
@@ -206,30 +283,6 @@ function Terminal({ close = function () {}, prompt }) {
             },
           }}
         />
-        {/* <div className="vstack">
-          {commandHistory.map((cmd, index) => (
-            <div className="terminal-show-prompt" key={index}>
-              {cmd}
-            </div>
-          ))}
-        </div>
-        <div className="hstack align-items-start">
-          <div className="terminal-show-prompt">$home/</div>
-
-          <div className="terminal-real-command w-100">
-            <form onSubmit={handleSubmit} className="w-100">
-              <input
-                type="text"
-                ref={textboxRef}
-                value={command}
-                onChange={(e) => {
-                  setCommand(e.target.value);
-                }}
-                className="terminal-input  outline-0 border-0 w-100 h-100"
-              />
-            </form>
-          </div>
-        </div> */}
       </div>
     </div>
   );

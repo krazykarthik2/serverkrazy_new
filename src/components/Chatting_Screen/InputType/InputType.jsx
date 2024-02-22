@@ -1,4 +1,4 @@
-import React, { useContext, useState  } from "react";
+import React, { useContext, useState } from "react";
 import { Button, Form, FormGroup, FormLabel } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -12,6 +12,7 @@ import {
   faPaperPlane,
   faPaperclip,
   faSmile,
+  faTerminal,
   faVideo,
 } from "@fortawesome/free-solid-svg-icons";
 import { isMobile } from "../../../utilites";
@@ -48,7 +49,7 @@ function InputType({ server, className }) {
     server.sendMessage(msg);
     setMsg("");
   }
-  const terminalcxt = useContext(TerminalCxt);
+  const terminalCxt = useContext(TerminalCxt);
 
   function handleFile(e) {
     Array.from(e.target.files).forEach((file) => {
@@ -169,18 +170,12 @@ function InputType({ server, className }) {
             <FontAwesomeIcon icon={faSmile} size="2x" color="#56f" />
           </Button>
 
-
-          {terminalcxt.isVisible ? (
-            <Terminal prompt="$chat>"/>
-            ):(
+          {terminalCxt.isVisible ? (
+            <Terminal prompt="$chat>" />
+          ) : (
             <InputElement {...{ msg, setMsg, handleMsgInput }} />
-            
           )}
-          
-          
-          
-          
-          
+
           <Button
             className="rounded-circle p-2 bg-transparent d-flex align-items-center justify-content-center border-0"
             onClick={() => {
@@ -199,6 +194,7 @@ function InputType({ server, className }) {
           </Button>
         </div>
       </Form>
+     
     </div>
   );
 }

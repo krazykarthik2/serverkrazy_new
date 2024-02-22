@@ -11,22 +11,19 @@ export function Chatting({
   _fileDelete,
   downloadURL,
 }) {
-
-
   console.log(Array.isArray(msgBucket), msgBucket);
   const [downloadURLmap, setDownloadURLmap] = React.useState({});
   window.downloadURLmap = downloadURLmap;
   useEffect(() => {
     let normalURLs = msgBucket.filter((e) => e.filePath).map((e) => e.filePath);
     let normURLsinMap = Object.keys(downloadURLmap);
-    console.log("bucket triggered"); 
+    console.log("bucket triggered");
     normalURLs.forEach((key) => {
       if (normURLsinMap.findIndex((e) => e == key) != -1) {
         return;
-      } else{
-        console.log('getting new url')
+      } else {
+        console.log("getting new url");
         downloadURL(key).then((res) => {
-          
           setDownloadURLmap((prev) => {
             return { ...prev, [key]: res };
           });
@@ -37,7 +34,7 @@ export function Chatting({
 
   return (
     <div className={className}>
-      {msgBucket.map((msg, index) => ( 
+      {msgBucket.map((msg, index) => (
         <>
           {msg == null && <DeletedMessage key={msg?.key} />}
 

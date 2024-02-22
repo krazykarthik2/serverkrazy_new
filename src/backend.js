@@ -118,7 +118,12 @@ class Server {
   getLink = () => {
     return "https://servercrazy.web.app/jump/" + this.serverName;
   };
-  onServChange = () => {};
+  onServerChange = () => {};
+  setServCookie = () => {};
+  onServChange = () => {
+    this.setServCookie(this.serverName);
+    this.onServerChange();
+  };
   onMsgUpdate = () => {};
 
   downloadURL = async (filePath) => {
@@ -232,16 +237,18 @@ class Server {
     }
   };
 
-  createServer = (ifNotAuthed=function(){},callback = function () {}) => {
+  createServer = (ifNotAuthed = function () {}, callback = function () {}) => {
     if (this.server != null) {
       alert("server exists");
     } else {
       if (this.fbobj)
         if (this.fbobj.currentUser != null) {
           this.serverName = getRandomString(8);
+
           onValue(
             ref(firebase.database(), this.serverName),
             (data) => {
+              if (this.server) return;
               console.log("server snapshot:", data);
               console.log(data);
 
@@ -254,7 +261,6 @@ class Server {
               this.serverOwner = this.fbobj.currentUser.uid;
               this.onServChange();
               this.setupServer();
-
               callback(this.serverName);
             },
             { onlyOnce: true }
@@ -275,6 +281,7 @@ class Server {
           this.server = null;
           this.serverOwner = "";
           this.serverName = "";
+
           // notice("#messageBucket", 'left from server');
           this.onServChange();
         }
@@ -307,7 +314,11 @@ class Server {
       this.handlemsgDelete(data.key);
     });
   };
-  jumpToServer = (server_shared_name,ifNotAuthed=function(){}, callback = function () {}) => {
+  jumpToServer = (
+    server_shared_name,
+    ifNotAuthed = function () {},
+    callback = function () {}
+  ) => {
     if (this.server != null) {
       alert("server exists");
       return false;
@@ -317,6 +328,7 @@ class Server {
           onValue(
             ref(firebase.database(), server_shared_name),
             (data) => {
+              if (this.server) return;
               if (data.exists()) {
                 this.serverName = server_shared_name;
 
@@ -328,7 +340,7 @@ class Server {
                 return true;
               } else {
                 alert("Server doesn`t exist");
-                console.log("callback is "+callback)
+                console.log("callback is " + callback);
                 callback(false);
                 return false;
               }
@@ -356,8 +368,8 @@ class Server {
     }
   }
   isMyServer = () => {
-    return  (this.serverOwner == this.fbobj.currentUser.uid) 
-  }
+    return this.serverOwner == this.fbobj.currentUser.uid;
+  };
   isMine = (sender) => {
     if (sender == this.fbobj.currentUser.uid) return "me";
     else return "";
@@ -435,7 +447,7 @@ class Server {
       }
     }
   };
-  sendLocation = (message_to_be_sent="") => {
+  sendLocation = (message_to_be_sent = "") => {
     if (this.fbobj.currentUser != null) {
       if (this.server != null) {
         this.getLocation(null, (coords) => {
@@ -522,6 +534,7 @@ class Server {
       callback();
     } else alert("already left from server");
     this.serverName = "";
+
     this.serverOwner = "";
     this.onServChange();
   };
@@ -546,6 +559,7 @@ class Server {
               });
             this.server = null;
             this.serverName = "";
+
             this.serverOwner = "";
             this.onServChange();
             callback(true);
@@ -554,6 +568,7 @@ class Server {
             console.error(err);
             this.server = null;
             this.serverName = "";
+
             this.serverOwner = "";
             this.onServChange();
             callback(false);
@@ -564,12 +579,14 @@ class Server {
         callback();
 
         this.serverName = "";
+
         this.serverOwner = "";
         this.onServChange();
       }
     } else {
       alert("already left from server");
       this.serverName = "";
+
       this.serverOwner = "";
       this.onServChange();
       callback();
@@ -960,10 +977,10 @@ class FBmanage {
 
   unlinkGoogle = () => {
     this.unlink("google.com");
-  }
+  };
   unlinkFacebook = () => {
     this.unlink("facebook.com");
-  }
+  };
   unlink = (provId) => {
     unlinkProvider(this.currentUser, provId)
       .then(() => {

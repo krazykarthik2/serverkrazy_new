@@ -12,6 +12,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Back, To_chat } from "./utils/Navigations";
 import { TerminalCxt, serverContext } from "./App";
 import Terminal from "./Terminal/Terminal";
+import {shareServer }from "./utils/js/utils";
 function ServerInfo() {
   const server = useContext(serverContext);
   const terminalCxt = useContext(TerminalCxt);
@@ -42,23 +43,22 @@ function ServerInfo() {
             </div>
           </div>
           <div className="serverName">{server.serverName}</div>
-          <div className="flex gap-3">
-            <Button className="" onClick={() => stopServer()}>
-              Stop
-            </Button>
-            <Button className="" onClick={() => exitServer()}>
-              Exit
-            </Button>
+          <div className="flex ">
+            {server.isMyServer() ? (
+              <Button className="" onClick={() => stopServer()}>
+                Stop
+              </Button>
+            ) : (
+              <Button className="" onClick={() => exitServer()}>
+                Exit
+              </Button>
+            )}
           </div>
           <div className="flex gap-3">
             <Button
               className=""
               onClick={() =>
-                navigator.share({
-                  title: "Jump in to " + server.getLink(),
-                  text: server.getLink(),
-                  url: server.getLink(),
-                })
+                shareServer()
               }
             >
               <FontAwesomeIcon icon={faShareNodes} size="3x" />
@@ -89,6 +89,8 @@ function ServerInfo() {
       </div>
     </div>
   );
+
+  
 }
 
 export default ServerInfo;

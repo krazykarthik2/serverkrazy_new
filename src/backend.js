@@ -1,40 +1,31 @@
 // import { HTMLforFile } from "./utilComponents/HTMLforFile";
 // import TEMPLATEfile from "./utilComponents/TEMPLATEfile";
 // import TEMPLATEmsg from "./utilComponents/TEMPLATEmsg";
+import { initializeApp } from "firebase/app";
 import {
-  ref as refStorage,
-  put,
-  uploadBytesResumable,
-  getStorage,
-  deleteObject,
-  getDownloadURL,
-  listAll,
-} from "firebase/storage";
-import {
+  EmailAuthProvider,
+  FacebookAuthProvider,
+  GoogleAuthProvider,
   createUserWithEmailAndPassword,
+  getAuth,
   getRedirectResult,
-  signInWithEmailAndPassword,
+  linkWithPopup,
   onAuthStateChanged,
+  reauthenticateWithCredential,
+  reauthenticateWithPopup,
+  reload,
+  sendEmailVerification,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
   signInWithPopup,
   signInWithRedirect,
   signOut,
-  getAuth,
-  updatePassword,
-  reauthenticateWithPopup,
-  updateProfile,
-  sendEmailVerification,
-  reauthenticateWithCredential,
-  linkWithPopup,
   unlink as unlinkProvider,
-  reload,
-  AuthCredential,
-  EmailAuthProvider,
-  sendPasswordResetEmail,
   updateEmail,
+  updatePassword,
+  updateProfile,
   verifyBeforeUpdateEmail,
 } from "firebase/auth";
-import { GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
-import { initializeApp } from "firebase/app";
 import {
   child,
   getDatabase,
@@ -46,15 +37,23 @@ import {
   push,
   ref,
   remove,
+  set,
   update,
 } from "firebase/database";
 import {
-  getThumb,
-  manageErrorFireBase,
-  log,
-  _,
-  getRandomString,
+  deleteObject,
+  getDownloadURL,
+  getStorage,
+  listAll,
+  ref as refStorage,
+  uploadBytesResumable,
+} from "firebase/storage";
+import {
   getParams,
+  getRandomString,
+  getThumb,
+  log,
+  manageErrorFireBase,
   timestamp,
 } from "./utilites.js";
 let TEMPLATEfile = () => {};
@@ -253,7 +252,7 @@ class Server {
               console.log(data);
 
               this.server = ref(firebase.database(), this.serverName);
-              push(child(this.server, "serverDetails"), {
+              set(child(this.server, "serverDetails"), {
                 owner: this.fbobj.currentUser.uid,
                 ownerName: this.fbobj.currentUser.displayName,
                 created: timestamp(),
@@ -296,8 +295,10 @@ class Server {
       ServerDetails: child(this.server, "serverDetails"),
       data: child(this.server, "data"),
     };
-    onChildAdded(child(this.server, "serverDetails"), (data) => {
-      this.serverOwner = data.val().owner;
+    onValue(child(this.server, "serverDetails"), (data) => {
+      if (data.exists()) {
+        this.serverOwner = data.val().owner;
+      }
       this.onServChange();
     });
 
@@ -368,6 +369,10 @@ class Server {
     }
   }
   isMyServer = () => {
+    if (this.server == null) {
+      return false;
+    }
+    if (this.fbobj.currentUser == null) return false;
     return this.serverOwner == this.fbobj.currentUser.uid;
   };
   isMine = (sender) => {

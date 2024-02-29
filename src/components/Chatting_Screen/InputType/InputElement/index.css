@@ -1,0 +1,14 @@
+.inputelement{
+    .float-control-label{
+        width: 100%;
+        .form-floating{
+            label{
+                color: white !important;
+                &:after{
+                    display: none
+                }
+            }
+        }
+    }
+    
+}

@@ -13,6 +13,7 @@ import JumpToServer from "./JumpToServer";
 import ServerInfo from "./ServerInfo";
 import { TerminalContextProvider } from "react-terminal";
 import { Cookies, useCookies, withCookies } from "react-cookie";
+import Loading from "./utils/Loading";
 const firebaseContext = React.createContext();
 const serverContext = React.createContext();
 const msgBucketContext = React.createContext();
@@ -29,7 +30,7 @@ function App() {
     });
   }
   const [cookies, setCookies] = useCookies(["serverName"]);
-  window._ = { __fb, __server, __msgBucket ,cookies};
+  window._ = { __fb, __server, __msgBucket, cookies };
   function setServCookie(serverName) {
     setCookies("serverName", serverName, { path: "/" });
   }
@@ -79,7 +80,7 @@ function App() {
   }, [server, fb, msgBucket]);
 
   return (
-    <div>
+  
       <firebaseContext.Provider value={__fb}>
         <serverContext.Provider value={__server}>
           <msgBucketContext.Provider value={__msgBucket}>
@@ -93,6 +94,15 @@ function App() {
               <TerminalContextProvider>
                 <BrowserRouter>
                   <Routes>
+                    <Route
+                      path="/loading"
+                      element={
+                        <Loading
+                          className="w-100 h-100 d-center flex-column"
+                          loadingText="loading jump interface"
+                        />
+                      }
+                    />
                     <Route path="/" element={<Home />} />
                     <Route path="/server/:server">
                       <Route path="" element={<ServerInfo />} />
@@ -137,7 +147,7 @@ function App() {
           </msgBucketContext.Provider>
         </serverContext.Provider>
       </firebaseContext.Provider>
-    </div>
+    
   );
 }
 

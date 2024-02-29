@@ -17,12 +17,13 @@ function Floating_Control_Label({
   value,
   onChange,
   autoComplete,
+  ...props
 }) {
   return (
     <div className="float-control-label">
       <FloatingLabel label={label} controlId={id}>
         <FormControl
-          {...{ value, onChange, type, className:("w-100"+className), autoComplete, label,placeholder }}
+          {...{ value, onChange, type, className:("w-100 "+className), autoComplete, label,placeholder,...props }}
         />
       </FloatingLabel>
     </div>
@@ -36,6 +37,7 @@ function Floating_Password_Label({
   autoComplete = "current-password",
   value,
   onChange,
+  ...props
 }) {
   const [show, setShow] = useState(false);
   return (
@@ -46,7 +48,7 @@ function Floating_Password_Label({
           <FormControl
             type={show ? "text" : "password"}
             className={"w-100 " + className}
-            {...{ placeholder, autoComplete, value, onChange }}
+            {...{ placeholder, autoComplete, value, onChange,...props }}
           />
 
         </FloatingLabel>

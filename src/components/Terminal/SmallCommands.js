@@ -15,5 +15,6 @@ const smallCommands = {
   },
   do: _do,
   exec: _do,
+  eval: _do,
 };
 export default smallCommands;

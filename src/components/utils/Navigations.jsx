@@ -11,10 +11,10 @@ function Back({className , to = ".."}) {
     </div>
   );
 }
-function To_chat({ serverName }) {
+function To_chat({ serverName,size="3x" }) {
   return (
-    <Link to={"/server/" + serverName + "/chat"} className="back" accessKey="G">
-      <FontAwesomeIcon icon={faArrowRight} size="2x" />
+    <Link to={"/server/" + serverName + "/chat"} className="back text-white" accessKey="G">
+      <FontAwesomeIcon icon={faArrowRight} size={size} />
     </Link>
   );
 }

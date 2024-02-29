@@ -1,21 +1,24 @@
 import React, { Fragment, useState } from "react";
-import { Form } from "react-bootstrap";
+import { FloatingLabel, Form, FormControl } from "react-bootstrap";
+import { Floating_Control_Label } from "../../../utils/FormComp";
+import "./index.css"
 
 function InputElement({ msg, setMsg, handleMsgInput }) {
   const [isFocused, setIsFocused] = useState(false);
   return (
-    <Form.Group className="w-100" controlId="ControlInput1">
-      
-
-      <Form.Control
+    <div className="inputelement w-100 d-flex align-items-stretch">
+      <Floating_Control_Label
+        className="resize-none w-100 border-0 outline-0 box-shadow-none text-input-msg bg-transparent text-white min-height-none h-fit-content"
+        label={!msg.includes('\n') ? <>T<u>y</u>pe a Message</> : <></>}
+        id="ControlInput1"
         as="textarea"
-        placeholder="Type a message"
+        placeholder=""
         autoFocus
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         onChange={(e) => setMsg(e.target.value)}
         value={msg}
-        accessKey="y" 
+        accessKey="y"
         onKeyDown={(e) => {
           if (e.key == "Enter") {
             if (e.shiftKey || e.altKey) {
@@ -29,7 +32,7 @@ function InputElement({ msg, setMsg, handleMsgInput }) {
           }
         }}
       />
-    </Form.Group>
+    </div>
   );
 }
 

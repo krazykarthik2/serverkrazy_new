@@ -1,22 +1,22 @@
 {
   "database": {
-      "rules": "database.rules.json"
+    "rules": "database.rules.json"
   },
   "hosting": [
-      {
-          "site": "servercrazy",
-          "public": "build",
-          "ignore": [
-              "firebase.json",
-              "**/.*",
-              "**/node_modules/**"
-          ],
-          "rewrites": [
-              {
-                  "source": "**",
-                  "destination": "/index.html"
-              }
-          ]
-      }
+    {
+      "site": "servercrazy",
+      "public": "build",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
   ]
 }

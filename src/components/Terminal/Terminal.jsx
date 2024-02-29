@@ -172,6 +172,13 @@ function Terminal({ close = function () {}, prompt }) {
     shareThis();
   }
 
+  function type() {
+    let x = smallCommands.do(...arguments)
+    if(x=="[Object Object]")return "object";
+    navigate("/server/" + server.serverName + "/chat", {
+      state: { messageTyped:new String(x) },
+    });
+  }
   const commands__ = {
     clear: () => {
       console.log("clearing");
@@ -210,6 +217,10 @@ function Terminal({ close = function () {}, prompt }) {
     },
     ...{
       send: send,
+      say: send,
+      echo:e=>e,
+      ["chat.type"]: type,
+      type: type,
       ["chat.send"]: send,
       ["chat.send.location"]: send_location,
       send_location: send_location,

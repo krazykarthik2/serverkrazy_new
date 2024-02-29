@@ -1,0 +1,11 @@
+$glass:#fff4
+$blur:4px
+@mixin bgglass 
+  background-color: $glass !important
+  backdrop-filter: blur($blur) !important
+  border-radius: 20px
+
+@mixin d-center
+  display: flex
+  align-items: center
+  justify-content: center

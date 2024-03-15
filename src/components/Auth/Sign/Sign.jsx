@@ -160,7 +160,7 @@ function Sign({ hasAccount }) {
                   )}
                 </div>
               </div>
-              <Button variant="primary" type="submit" block className="login">
+              <Button variant="primary" type="submit"  className="login w-100">
                 {hasAccount ? "Login" : "Sign Up"}
               </Button>
             </div>

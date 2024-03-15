@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 function Location({ msg, index, _delete }) {
   
   return (
-    <div className="w-100 h-100">
+    <div className="w-100">
       <div className="hstack">
         <Button
           className="delete"

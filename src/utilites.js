@@ -36,7 +36,7 @@ function manageErrorFireBase(error) {
         alert("YouAlrRegistered");
         break;
       case "auth/wrong-password":
-        alert("wrongPassword3rd");
+        alert("wrongPassword");
         break;
       case "auth/too-many-requests":
         alert("too  many requests account has been temporarily disabled...");
@@ -103,13 +103,25 @@ function timestamp() {
   return date_now_ms.valueOf();
 }
 function isMobile() {
-  const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+  const regex =
+    /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
   return regex.test(navigator.userAgent);
 }
-
-export {
+window.util = {
   _,
   log,
+  getThumb,
+  getRandomString,
+  auto_height,
+  fallbackutil,
+  timestamp,
+  getParams,
+  manageErrorFireBase,
+  isMobile,
+};
+export {
+  _,
+  log, 
   getThumb,
   getRandomString,
   auto_height,

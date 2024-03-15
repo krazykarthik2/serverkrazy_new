@@ -7,10 +7,9 @@ import { Chatting } from "./Chatting";
 import { ServerInfoHeading } from "./ServerInfoHeading";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
 import { _delete, _fileDelete } from "../../backend";
 import InputType from "./InputType";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 function ServerChat() {
   // { firebase, server, msgBucket }
@@ -54,7 +53,7 @@ function ServerChat() {
       <div className="hstack h-100 align-items-end overflow-hidden">
         <Chatting
           msgBucket={msgBucket.filter((e) => e)}
-          className="w-100 h-100  overflow-auto align-items-end d-center "
+          className="w-100 h-100  overflow-auto align-items-end d-center flex-column justify-content-end"
           _delete={handleDelete}
           _fileDelete={handleFileDelete}
           downloadURL={server.downloadURL}

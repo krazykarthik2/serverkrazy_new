@@ -46,3 +46,12 @@ img{
 .resize-none{
     resize: none !important;
 }
+.font-px-8{
+    font-size: 8px !important;
+}
+.min-w-px-40{
+    min-width: 100px !important;
+}
+.min-h-100{
+    min-height: 100% !important;
+}

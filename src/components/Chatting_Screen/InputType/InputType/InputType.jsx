@@ -44,9 +44,7 @@ function InputType({ server, className }) {
       terminalCxt.setTerminalVisibility(false);
     }
   }, [location]);
-  function shareContacts() {
-    server.sendContacts();
-  }
+
   function shareLocation() {
     server.sendLocation(msg);
   }
@@ -73,17 +71,6 @@ function InputType({ server, className }) {
           <div className="fileshare-cont">
             <div className="other-cont  ">
               <div className="other">
-                <Button
-                  onClick={() => shareContacts()}
-                  className="bg-transparent border-0"
-                >
-                  <FontAwesomeIcon
-                    icon={faContactBook}
-                    size="2x"
-                    color="#9f8"
-                  />
-                </Button>
-
                 <Button
                   onClick={() => shareLocation()}
                   className="bg-transparent border-0"
@@ -194,27 +181,37 @@ function InputType({ server, className }) {
                   setFileShareVisible(false);
                   setEmojiVisible((e) => !e);
                 }}
-                className="emoji-btn btn"
+                className="emoji-btn btn act-btn"
               >
-                <FontAwesomeIcon icon={faSmile} size="2x" />
+                <FontAwesomeIcon
+                  icon={faSmile}
+                  size="2x"
+                  className="act-icon"
+                />
               </button>
 
               <InputElement {...{ msg, setMsg, handleMsgInput }} />
 
               <button
-                className="clip-btn btn"
+                className="clip-btn btn act-btn"
                 onClick={() => {
                   setEmojiVisible(false);
                   setFileShareVisible((e) => !e);
                 }}
               >
-                <FontAwesomeIcon icon={faPaperclip} size="2x" color="#054c6c" />
+                <FontAwesomeIcon
+                  icon={faPaperclip}
+                  size="2x"
+                  color="#054c6c"
+                  className="act-icon"
+                />
               </button>
-              <button type="submit" className="send-btn btn">
+              <button type="submit" className="send-btn btn act-btn">
                 <FontAwesomeIcon
                   icon={faPaperPlane}
                   size="2x"
                   color={"#1c1c1c"}
+                  className="act-icon"
                 />
               </button>
             </div>

@@ -4,7 +4,7 @@ import Loading from "../../utils/Loading";
 import { AudioFile, ImageFile, OtherFile, VideoFile } from "../Chat/Files";
 import { useMemo } from "react";
 
-function ChatFile({ msg, index, _fileDelete, downloadURL }) {
+function ChatFile({ msg, index, _fileDelete, downloadURL ,pfp}) {
   return (
     <>
       {msg.fileType.includes("image") && (
@@ -13,6 +13,7 @@ function ChatFile({ msg, index, _fileDelete, downloadURL }) {
           index={index}
           _fileDelete={_fileDelete}
           url={downloadURL}
+          pfp={pfp}
         />
       )}
       {msg.fileType.includes("audio") && (
@@ -21,6 +22,7 @@ function ChatFile({ msg, index, _fileDelete, downloadURL }) {
           index={index}
           _fileDelete={_fileDelete}
           url={downloadURL}
+          pfp={pfp}
         />
       )}
       {msg.fileType.includes("video") && (
@@ -29,6 +31,7 @@ function ChatFile({ msg, index, _fileDelete, downloadURL }) {
           index={index}
           _fileDelete={_fileDelete}
           url={downloadURL}
+          pfp={pfp}
         />
       )}
       {["image", "audio", "video"].findIndex((x) => msg.fileType.includes(x)) !=
@@ -38,6 +41,7 @@ function ChatFile({ msg, index, _fileDelete, downloadURL }) {
           index={index}
           _fileDelete={_fileDelete}
           url={downloadURL}
+          pfp={pfp}
         />
       )}
     </>

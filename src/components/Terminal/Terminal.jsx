@@ -111,6 +111,21 @@ function Terminal({ close = function () {}, prompt }) {
       server.sendMessage(x);
     } else return "server doesn't exist";
   }
+  function handleProfilePicEdit() {
+    navigate("/profile/edit", { state: { command: "profile.pic.edit" } });
+  }
+  function handleProfilePicRemove() {
+    navigate("/profile/edit", { state: { command: "profile.pic.remove" } });
+  }
+  function handleFileSend() {
+    if (server.server) {
+      navigate("/server/" + server.serverName + "/chat", {
+        state: {
+          command: "sendFile",
+        },
+      });
+    } else return "server doesn't exist";
+  }
   function send_location() {
     if (server.server) {
       server.sendLocation();
@@ -173,10 +188,10 @@ function Terminal({ close = function () {}, prompt }) {
   }
 
   function type() {
-    let x = smallCommands.do(...arguments)
-    if(x=="[Object Object]")return "object";
+    let x = smallCommands.do(...arguments);
+    if (x == "[Object Object]") return "object";
     navigate("/server/" + server.serverName + "/chat", {
-      state: { messageTyped:new String(x) },
+      state: { messageTyped: new String(x) },
     });
   }
   const commands__ = {
@@ -217,16 +232,22 @@ function Terminal({ close = function () {}, prompt }) {
     },
     ...{
       send: send,
+      ["send.file"]: handleFileSend,
       say: send,
-      echo:e=>e,
+      echo: (e) => e,
       ["chat.type"]: type,
       type: type,
       ["chat.send"]: send,
+
       ["chat.send.location"]: send_location,
       send_location: send_location,
     },
     ...{
       ["profile.edit"]: edit_profile,
+      ["profile.pic.edit"]: handleProfilePicEdit,
+      ["profile.pic.remove"]: handleProfilePicRemove,
+    },
+    ...{
       ["auth.edit"]: edit_auth,
       ["auth.login"]: login,
       login: login,

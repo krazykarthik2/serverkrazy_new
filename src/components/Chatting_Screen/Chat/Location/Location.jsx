@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef } from "react";
 import { Button, Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
-function Location({ msg, index, _delete }) {
+function Location({ msg, index, _delete ,pfp}) {
   
   return (
     <div className="w-100">

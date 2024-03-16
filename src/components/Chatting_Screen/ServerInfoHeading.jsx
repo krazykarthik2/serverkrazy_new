@@ -13,13 +13,18 @@ export function ServerInfoHeading({ firebase, server, className }) {
           className="justify-content-evenly w-100"
         >
           <img
-            src={"https://api.qrserver.com/v1/create-qr-code/?size=75x75&data=" +
-              server.serverName}
-            className="rounded" />
+            src={
+              "https://api.qrserver.com/v1/create-qr-code/?size=75x75&data=" +
+              server.serverName
+            }
+            className="rounded"
+          />
           <h1>{server.serverName}</h1>
           <img
-            src={firebase?.currentUser?.photoURL || ""}
-            className="rounded" />
+            src={firebase?.profilePic || ""}
+            className="rounded"
+            width={"100"}
+          />
         </Stack>
       </Stack>
     </div>

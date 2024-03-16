@@ -60,6 +60,11 @@ let TEMPLATEfile = () => {};
 let HTMLforFile = () => {};
 let TEMPLATEmsg = () => {};
 
+window.util = {
+  ...window.util,
+  getDownloadURL,
+};
+
 const firebase = {
   storage: getStorage,
   database: getDatabase,
@@ -117,6 +122,9 @@ class Server {
   getLink = () => {
     return "https://servercrazy.web.app/jump/" + this.serverName;
   };
+  isPfpStoredinFb = (pfp)=>{
+    return !pfp.startsWith("https://lh3")
+  }
   onServerChange = () => {};
   setServCookie = () => {};
   onServChange = () => {
@@ -151,89 +159,6 @@ class Server {
 
     delete this.msgbucket[this.msgbucket.findIndex((msg) => msg?.key == key)];
     this.onMsgUpdate();
-  };
-  findFileInURL = () => {
-    if (this.paramsURL["server"]) {
-      this.jumpToServer(this.paramsURL["server"]);
-      delete this.paramsURL["server"];
-    }
-    if (this.paramsURL["img"]) {
-      getDownloadURL(
-        refStorage(firebase.storage(), "/" + this.paramsURL["img"])
-      ).then((fileURL) => {
-        alert(
-          `<section class="impNotify screen">${HTMLforFile(
-            "image",
-            fileURL
-          )}<a class="icon link" target="_blank" href="${
-            window.location.origin +
-            window.location.pathname +
-            "?img=" +
-            this.paramsURL["img"]
-          }"></a> </section>`
-        );
-      });
-    }
-    if (this.paramsURL["vid"]) {
-      firebase
-        .storage()
-        .ref(this.paramsURL["vid"])
-        .getDownloadURL()
-        .then((fileURL) => {
-          alert(
-            `<section class="impNotify screen">${HTMLforFile(
-              "video",
-              fileURL,
-              ""
-            )}<a class="icon link" target="_blank" href="${
-              window.location.origin +
-              window.location.pathname +
-              "?vid=" +
-              this.paramsURL["vid"]
-            }"></a> </section>`
-          );
-        });
-    }
-    if (this.paramsURL["aud"]) {
-      firebase
-        .storage()
-        .ref(this.paramsURL["aud"])
-        .getDownloadURL()
-        .then((fileURL) => {
-          alert(
-            `<section class="impNotify screen">${HTMLforFile(
-              "audio",
-              fileURL,
-              ""
-            )}<a class="icon link" target="_blank" href="${
-              window.location.origin +
-              window.location.pathname +
-              "?aud=" +
-              this.paramsURL["aud"]
-            }"></a> </section>`
-          );
-        });
-    }
-    if (this.paramsURL["file"]) {
-      firebase
-        .storage()
-        .ref(this.paramsURL["file"])
-        .getDownloadURL()
-        .then((fileURL) => {
-          alert(
-            `<section class="impNotify screen">${HTMLforFile(
-              "",
-              fileURL,
-              ""
-            )}<a class="icon link" target="_blank" href="${
-              window.location.origin +
-              window.location.pathname +
-              "?file=" +
-              this.paramsURL["file"]
-            }"></a> </section>`
-          );
-        });
-    }
   };
 
   createServer = (ifNotAuthed = function () {}, callback = function () {}) => {
@@ -388,7 +313,7 @@ class Server {
           time: timestamp(),
           sender: this.fbobj.currentUser.uid,
           senderName: this.fbobj.currentUser.displayName,
-          senderPhoto: this.fbobj.thumbPic,
+          senderPhoto: this.fbobj.currentUser.photoURL,
 
           fileType: "image",
           fileName: "qrcode",
@@ -409,7 +334,7 @@ class Server {
           time: timestamp(),
           sender: this.fbobj.currentUser.uid,
           senderName: this.fbobj.currentUser.displayName,
-          senderPhoto: this.fbobj.thumbPic,
+          senderPhoto: this.fbobj.currentUser.photoURL,
 
           fileType: file.type,
           fileName: file.name,
@@ -462,7 +387,7 @@ class Server {
             time: timestamp(),
             sender: this.fbobj.currentUser.uid,
             senderName: this.fbobj.currentUser.displayName,
-            senderPhoto: this.fbobj.thumbPic,
+            senderPhoto: this.fbobj.currentUser.photoURL,
 
             lat: coords.latitude,
             lon: coords.longitude,
@@ -515,7 +440,7 @@ class Server {
         time: timestamp(),
         sender: this.fbobj.currentUser.uid,
         senderName: this.fbobj.currentUser.displayName,
-        senderPhoto: this.fbobj.thumbPic,
+        senderPhoto: this.fbobj.currentUser.photoURL,
       });
     }
   };
@@ -649,24 +574,27 @@ class FBmanage {
       });
     return providerList;
   };
+
   profilePic = "";
   profPiconFB = false;
   thumbPic = "";
 
-  updateProfPic = (callback = function () {}) => {
+  updateProfPicInternal = (callback = function () {}) => {
     if (this.currentUser.photoURL) {
       if (this.currentUser.photoURL.startsWith("https://lh3")) {
         this.profilePic = this.currentUser.photoURL;
         this.profPiconFB = false;
+        this.onUpdate();
         callback();
       } else {
         this.profPiconFB = true;
-        getDownloadURL(refStorage(this.currentUser.photoURL)).then(
-          (fileURL) => {
-            this.profilePic = fileURL;
-            callback();
-          }
-        );
+        getDownloadURL(
+          refStorage(firebase.storage(), this.currentUser.photoURL)
+        ).then((fileURL) => {
+          this.profilePic = fileURL;
+          this.onUpdate();
+          callback();
+        });
       }
     }
   };
@@ -718,7 +646,7 @@ class FBmanage {
       this.token = null;
       this.whenSignOut();
     } else {
-      this.updateProfPic(() => {
+      this.updateProfPicInternal(() => {
         getThumb(this.profilePic, 30, (res) => {
           this.thumbPic = res;
         });
@@ -998,9 +926,12 @@ class FBmanage {
     this.getimglink(file, (dataURL) => {
       updateProfile(this.currentUser, {
         photoURL: dataURL,
-      });
-      reload(this.currentUser);
-      this.updateProviderData(this.currentUser);
+      }).then(() => {
+        
+        reload(this.currentUser);
+        this.updateProviderData(this.currentUser);
+        callback();
+      })
     });
   };
   signUp = (
@@ -1078,7 +1009,7 @@ class FBmanage {
     //firebase create user
     createUserWithEmailAndPassword(firebase.auth(), email, password)
       .then((result) => {
-        result.user.updateProfile(updateOptions).then(() => {
+        updateProfile(result.user,updateOptions).then(() => {
           this.updateProviderData(result.user);
 
           callback();

@@ -38,10 +38,19 @@ function InputType({ server, className }) {
   const [fileShareVisible, setFileShareVisible] = useState(false);
   const [emojiVisible, setEmojiVisible] = useState(false); // [setEmojiVisible]
   const location = useLocation();
+
+  function openFile() {
+    document.getElementById("formFile")?.click();
+  }
+  
   useEffect(() => {
     if (location.state?.messageTyped) {
       setMsg(new String(location.state.messageTyped));
       terminalCxt.setTerminalVisibility(false);
+    }
+    if(location.state?.command === "sendFile"){
+      setFileShareVisible(true);
+      openFile();
     }
   }, [location]);
 
@@ -160,7 +169,7 @@ function InputType({ server, className }) {
                   {emojis.map((emoji) => (
                     <button
                       type="button"
-                      className="btn emoji"
+                      className="btn emoji p-0"
                       onClick={() => setMsg((e) => e + emoji)}
                     >
                       {emoji}
@@ -181,7 +190,7 @@ function InputType({ server, className }) {
                   setFileShareVisible(false);
                   setEmojiVisible((e) => !e);
                 }}
-                className="emoji-btn btn act-btn"
+                className="emoji-btn btn act-btn p-0"
               >
                 <FontAwesomeIcon
                   icon={faSmile}
@@ -193,7 +202,7 @@ function InputType({ server, className }) {
               <InputElement {...{ msg, setMsg, handleMsgInput }} />
 
               <button
-                className="clip-btn btn act-btn"
+                className="clip-btn btn act-btn p-0 m-0"
                 onClick={() => {
                   setEmojiVisible(false);
                   setFileShareVisible((e) => !e);
@@ -202,11 +211,11 @@ function InputType({ server, className }) {
                 <FontAwesomeIcon
                   icon={faPaperclip}
                   size="2x"
-                  color="#054c6c"
+                  color="#1c1c1c"
                   className="act-icon"
                 />
               </button>
-              <button type="submit" className="send-btn btn act-btn">
+              <button type="submit" className="send-btn btn act-btn p-0 m-0">
                 <FontAwesomeIcon
                   icon={faPaperPlane}
                   size="2x"

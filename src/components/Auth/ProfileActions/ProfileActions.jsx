@@ -2,7 +2,7 @@ import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useEffect, useState } from "react";
 import { Alert, Button, Card, Form, FormControl } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { firebaseContext } from "../../App";
 import { Floating_Control_Label } from "../../utils/FormComp";
 import { Back } from "../../utils/Navigations";
@@ -15,6 +15,22 @@ function ProfileActions() {
   const [pfpFile, setPfpFile] = useState(null);
   const [pfpUrl, setPfpUrl] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location?.state?.command == "profile.pic.edit") {
+      location.state = null;
+      uploadProfilePicForce();
+    }
+    if (location?.state?.command == "profile.pic.remove") {
+      handleProfilePicRemove();
+    }
+  }, [location]);
+
+  function uploadProfilePicForce() {
+    document.getElementById("profile-pic-new")?.click();
+  }
+
   function handlePfpUpload(e) {
     e.preventDefault();
     setPfpFile(e.target.files[0]);
@@ -28,14 +44,16 @@ function ProfileActions() {
   window.pfpURL = pfpUrl;
 
   function handleProfilePicChange(file, callback = function () {}) {
-    if (firebase?.currentUser) {
-      firebase.updatePhoto(file, callback);
-    }
+    if (firebase)
+      if (firebase.currentUser) {
+        firebase.updatePhoto(file, callback);
+      }
   }
   function handleProfilePicRemove() {
-    if (firebase?.currentUser) {
-      firebase.removeProfilePic();
-    }
+    if (firebase)
+      if (firebase.currentUser) {
+        firebase.removeProfilePic();
+      }
   }
 
   useEffect(() => {
@@ -58,7 +76,11 @@ function ProfileActions() {
       firebase.updateEmail(email, notRecentlyAuthed, setIsEmailSent(true));
     if (firebase?.currentUser?.displayName != username)
       firebase.updateDisplayName(username);
-    if (!pfpFile) handleProfilePicChange(pfpFile);
+    if (pfpFile)
+      handleProfilePicChange(pfpFile, () => {
+        alert("profile pic updated");
+        setPfpFile(null);
+      });
   }
   return (
     <div className="vw-100  vh-100 d-flex flex-column align-items-center justify-content-between">
@@ -69,16 +91,21 @@ function ProfileActions() {
         <h1 className="d-center">Update Profile</h1>
         <div className="d-center flex-column">
           <img
-            src={pfpUrl || firebase?.currentUser?.photoURL}
+            src={pfpUrl || firebase?.profilePic}
             className="rounded-circle border border-5 border-secondary"
             width={"200"}
           />
-          <div className="actions d-flex">
-            <Card title="pfp" className="p-2">
+          <div className="actions d-flex justify-content-center w-100 gap-2">
+            <Card title="pfp" className="p-2 ps-4">
               <h1>
                 <FontAwesomeIcon icon={faEdit} /> Change
               </h1>
-              <FormControl type="file" onChange={handlePfpUpload} />
+
+              <FormControl
+                type="file"
+                id="profile-pic-new"
+                onChange={handlePfpUpload}
+              />
             </Card>
             <Button
               className="btn border-0 btn-danger"
@@ -89,10 +116,6 @@ function ProfileActions() {
               <div className="line">Profile Pic</div>
             </Button>
           </div>
-          <div className="text-center h4">
-            {firebase?.currentUser?.displayName}
-          </div>
-          <div className="text-center">{firebase?.currentUser?.email}</div>
         </div>
 
         <Floating_Control_Label
@@ -107,24 +130,29 @@ function ProfileActions() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <Button
-          type="submit"
-          className="btn"
-          variant="primary"
-          disabled={
-            firebase?.currentUser?.email == email &&
-            firebase?.currentUser?.displayName == username &&
-            !pfpFile
-          }
-        >
-          Update{" "}
-          {[
-            firebase?.currentUser?.email != email ? "Email" : "",
-            firebase?.currentUser?.displayName != username ? "Username" : "",
-          ]
-            .filter((e) => e)
-            .join(" and ")}
-        </Button>
+        <div className="d-center">
+          <button
+            type="submit"
+            className="btn d-center btn-primary "
+            disabled={
+              firebase?.currentUser?.email == email &&
+              firebase?.currentUser?.displayName == username &&
+              !pfpFile
+            }
+          >
+            <span className="h3 fw-normal">
+              Update{" "}
+              {[
+                firebase?.currentUser?.email != email ? "Email" : "",
+                firebase?.currentUser?.displayName != username
+                  ? "Username"
+                  : "",
+              ]
+                .filter((e) => e)
+                .join(" and ")}
+            </span>
+          </button>
+        </div>
       </Form>
       {isEmailSent && (
         <Alert>

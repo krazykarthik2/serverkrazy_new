@@ -4,7 +4,7 @@ import React from "react";
 import { Button, Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-function OtherFile({ msg, index, _fileDelete, url }) {
+function OtherFile({ msg, index, _fileDelete, url ,pfp}) {
   return (
     <div className="w-100 ">
       <div className="hstack">

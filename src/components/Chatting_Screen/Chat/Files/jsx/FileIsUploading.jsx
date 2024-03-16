@@ -1,7 +1,7 @@
 import React from "react";
 import { Stack } from "react-bootstrap";
 
-function FileIsUploading({ msg, index }) {
+function FileIsUploading({ msg, index ,pfp}) {
   return (
     <div className="w-100 h-100">
       <div className="hstack">
@@ -12,6 +12,7 @@ function FileIsUploading({ msg, index }) {
         >
           <p>{msg.bytesTransferred}</p> / <p>{msg.totalBytes}</p>
         </Stack>
+        
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import user_svg from "../../../../../assets/user.svg";
 
-function ImageFile({ msg, index, _fileDelete, url }) {
+function ImageFile({ msg, index, _fileDelete, url,pfp }) {
   return (
     <div className="w-100 d-flex justify-content-end">
       <div className="d-flex ">
@@ -28,7 +28,7 @@ function ImageFile({ msg, index, _fileDelete, url }) {
         </div>
         <div className="d-flex flex-column align-items-end bg-glass border border-3 border-glass rounded-3 p-2">
           <div className="d-flex flex-column msg-body">
-            <p className="w-100 min-w-px-40">
+            <div className="w-100 min-w-px-40 vstack align-items-end">
               <img
                 src={url}
                 className="url-resource-file-chat rounded "
@@ -41,7 +41,7 @@ function ImageFile({ msg, index, _fileDelete, url }) {
                 ))}
               </p>
               <div className="text-nowrap opacity-50 font-px-8">{msg.key}</div>
-            </p>
+            </div>
             <div className="sender-text">
               <div>{msg.senderName}</div>
               <div className="text-nowrap d-none">{msg.sender}</div>

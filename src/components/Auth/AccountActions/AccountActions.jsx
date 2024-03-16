@@ -11,6 +11,7 @@ import AccountInfoBlock from "./AccountInfoBlock";
 import "./index.css";
 function AccountActions() {
   const firebase = useContext(firebaseContext);
+  window.ffb  = firebase
   const navigate = useNavigate();
 
   function handleSignOut() {
@@ -41,16 +42,6 @@ function AccountActions() {
     }
   }
 
-  function handleProfilePicChange(file, callback = function () {}) {
-    if (firebase?.currentUser) {
-      firebase.updatePhoto(file, callback);
-    }
-  }
-  function handleProfilePicRemove() {
-    if (firebase?.currentUser) {
-      firebase.removeProfilePic();
-    }
-  }
   const [lastSignInTime, setLastSignInTime] = useState(null);
   const [createdAt, setCreatedAt] = useState(null);
 
@@ -72,9 +63,7 @@ function AccountActions() {
         <div className="mb-2">
           <UserShowingProfile
             username={firebase?.currentUser?.displayName}
-            picture={firebase?.currentUser?.photoURL}
-            onRemoveProfilePic={handleProfilePicRemove}
-            onEditProfilePic={handleProfilePicChange}
+            picture={firebase?.profilePic}
             onSignout={handleSignOut}
           />
         </div>

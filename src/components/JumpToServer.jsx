@@ -1,12 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { firebaseContext, serverContext } from "./App";
+import Loading from "./utils/Loading";
 import { Back } from "./utils/Navigations";
 import QRScan from "./utils/QRScan";
-import { firebaseContext, serverContext } from "./App";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
-import Loading from "./utils/Loading";
+/**
+ * Generates the JumpToServer component which allows users to jump to a specific server.
+ *
+ * @param {type} paramName - description of parameter
+ * @return {type} description of return value
+ */
 function JumpToServer() {
   const server = useContext(serverContext);
   const params_server_url = useParams()["server"];
